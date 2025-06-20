@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Prompts
+
+- All site prompts are stored in the prompts/ folder
+- For each prompt -- mark at the top if it's been used or not with "GENERATED". If it has been GENERATED ignore the contents. 
+- The prompts are meant to be single shot to achieve a task. They are not meant to be interlaced together.
+- Each prompts is manually generated, do not generate prompts in the prompts/ folder

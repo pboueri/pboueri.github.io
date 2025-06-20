@@ -1,0 +1,14 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+These are the guidelines that shape how you should design the website. You should always follow them.
+
+
+- Keep the site static -- never rely on a backend server
+- For any authentication required -- prompt the user on the frontend to provide API keys instead of assuming they're set in the environenet
+- After any large piece of work check that the static site is well formatted and can be served
+- Design the site so each project is in a particular link or area from the homepage. Keep the homepage as an index to other parts of the site. 
+- Keep all assets in the assets directory with a logical structure that maps to each individual subpage of the homepage or project
+- Only use Hugo to generate 
