@@ -1,7 +1,6 @@
 # Hysterai Prompt
 
-**GENERATED** - 2024-12-21 - Created Hysterai game project with Three.js
-
+**GENERATED** - 2024-12-21 - COMPLETED SUCCESSFULLY
 
 Hysterai is meant to capture the inevitability of AI and how it will catch up to us. Modeled after the myth of sisyphus, the concept art / game is a first person game where the character attempts to walk up the hill to reach the top and their goal, where they win. Behind them if they were to turn around is an amoeba that initially moved very slowly, but slowly grows over time. The amoeba represents AI and is able to change the rules of the game as it goes. This makes it hard for you to reach the top of the hill, as the amoeba seeks to consume you. Ultimately it does so and the screens goes black, with voices of others who have tried to reach the top all around you. 
 
@@ -57,3 +56,6 @@ Instructions for generating:
 - Break down the task into steps and execute those steps. This should be a one shot generation with no intermediate states.
 - Seperate out the game engine into distinct js files and knit them together with hugo into the main index file
 - Use cheerio.js to inspect the output after rendering with hugo and validate it looks correct to spec. If you see any bugs make note of them and fix them until it seems all good.
+- Ensure the JavaScript is copied to the right folder and keep track of MIME type issues.
+- Name the prompt "hysterai.md" different than the project. Call it "hysteriai_prompt" just so it doesn't get routed in the wrong place when knitting the Hugo.
+- Ensure that the game renders in all different types of window browsers. Scale the game according to the browser size.
