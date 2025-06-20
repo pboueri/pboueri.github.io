@@ -13,3 +13,4 @@ These are the guidelines that shape how you should design the website. You shoul
 - Keep all assets in the assets directory with a logical structure that maps to each individual subpage of the homepage or project
 - Only use Hugo to generate the site
 - After every long generation, validate that hugo can build
+- When creating games, you must use Three.js as the core game engine
