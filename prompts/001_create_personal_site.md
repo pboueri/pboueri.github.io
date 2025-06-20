@@ -1,3 +1,5 @@
+GENERATED
+
 # Create Personal Site
 
 Generate a personal hugo site that has space for the following content. The content itself will be generated in the future so stubs are just fine. 

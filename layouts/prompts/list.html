@@ -1,0 +1,24 @@
+{{ define "main" }}
+<div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    <h1>{{ .Title }}</h1>
+    {{ with .Content }}
+    <div style="margin: 2rem 0;">
+        {{ . }}
+    </div>
+    {{ end }}
+    
+    <div style="margin-top: 3rem;">
+        <h2>Available Prompts</h2>
+        <p style="color: #666; margin-bottom: 2rem;">These are the prompts stored in the <code>prompts/</code> directory that were used to generate parts of this site.</p>
+        
+        <!-- We'll list the prompts from the file system -->
+        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 6px; border-left: 4px solid #007acc;">
+            <h3 style="margin-bottom: 1rem;">
+                <a href="/prompts/001/" style="color: #007acc; text-decoration: none;">001 - Create Personal Site</a>
+            </h3>
+            <p style="color: #666; margin-bottom: 0.5rem;">Status: <span style="color: #28a745; font-weight: bold;">GENERATED ✓</span></p>
+            <p>The foundational prompt used to create the initial structure of this Hugo-based personal website.</p>
+        </div>
+    </div>
+</div>
+{{ end }} 

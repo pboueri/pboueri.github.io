@@ -11,4 +11,5 @@ These are the guidelines that shape how you should design the website. You shoul
 - After any large piece of work check that the static site is well formatted and can be served
 - Design the site so each project is in a particular link or area from the homepage. Keep the homepage as an index to other parts of the site. 
 - Keep all assets in the assets directory with a logical structure that maps to each individual subpage of the homepage or project
-- Only use Hugo to generate 
+- Only use Hugo to generate the site
+- After every long generation, validate that hugo can build
