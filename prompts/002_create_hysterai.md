@@ -6,7 +6,7 @@ Opening Page:
 - An electronic font that switches from Hysteria to Hysterai every so often with static
 - A button that says play
 - A box to enter an OpenAI key -- required to play
-- A drop down for which openai model to use
+- A drop down for which openai model to use (include latest models: gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, o3, o3-mini, o4-mini)
 
 Gameplay:
 - The character is moved with the arrow keys up/left/down/right
@@ -30,12 +30,17 @@ End State:
 
 Environment:
 - Color at first, and fades to gray as the minute timer gets closer to 0:00
-- Grass and sky with a hill that has a flag for "goal" at the top of it
+- Visible grass terrain with contrasting colors (dark green terrain against lighter sky)
+- Solid ground that the player can clearly see and walk on with proper collision detection
+- A hill that has a flag for "goal" at the top of it
+- Ensure terrain is properly lit and visible (not blending with sky color)
 
 Amoeba Abilities:
 - It can move forward to reach the player
 - It must be big enough (the size of the player) to consume the player
 - Each action is to be taken by invoking OpenAI. An appropriate game state is sent to OpenAI, and OpenAI responds with the appropriate next action for the amoeba
+- The amoeba starts VERY SLOWLY (initial speed should be 0.02 or slower) to give player a fair chance
+- Actions should be taken every 10-15 seconds initially, not every 5 seconds
 - The amoeba can move left/right/up/down
 - It can change the rules of the game by:
     - Inverting or rotating the viewport of the player
@@ -43,7 +48,7 @@ Amoeba Abilities:
     - Making the player default to crawling or crouching or jumping
     - Decrease the players speed by a little
     - Increase the amoeba's size by a little
-    - Increase the amoeba's speed by a little
+    - Increase the amoeba's speed by a little (but only small increments, like 0.01)
 
 
 Instructions for generating:
@@ -62,53 +67,16 @@ Instructions for generating:
 
 Based on implementation experience, the following improvements should be made to this prompt:
 
-### Hugo Integration Issues
-- **Problem**: Hugo wraps content in layouts, causing conflicts with full-screen games
-- **Solution**: Specify that a custom Hugo layout (`layouts/projects/hysterai.html`) should be created that renders raw HTML content using `{{ .RawContent | safeHTML }}`
-- **Improvement**: Add explicit instruction: "Create a custom Hugo layout that bypasses the default site layout to allow full-screen game experience"
+### Implementation Requirements
 
-### Testing & Debugging Requirements
-- **Problem**: No clear testing methodology specified for debugging integration issues
-- **Solution**: Replace cheerio.js instruction (not applicable in Hugo context) with:
-  - "Test the game loading process with browser developer console"
-  - "Add debug logging to track initialization steps"
-  - "Verify all static assets are correctly served by Hugo"
-  - "Test game functionality end-to-end before considering complete"
+**Hugo Integration**: Create a custom Hugo layout (`layouts/projects/hysterai.html`) that bypasses default site styling and renders raw HTML using `{{ .RawContent | safeHTML }}` for full-screen game experience.
 
-### File Structure Clarity
-- **Problem**: Ambiguity about where JavaScript files should be placed and copied
-- **Solution**: Specify explicit file structure:
-  ```
-  assets/projects/hysterai/*.js (source files)
-  static/assets/projects/hysterai/*.js (served files - copy from assets)
-  content/projects/hysterai/index.html (game page with Hugo front matter)
-  layouts/projects/hysterai.html (custom layout)
-  ```
+**File Structure**: 
+- Source: `assets/projects/hysterai/*.js` 
+- Served: `static/assets/projects/hysterai/*.js` (copy from assets)
+- Content: `content/projects/hysterai.md` with Hugo front matter
+- Layout: `layouts/projects/hysterai.html`
 
-### Error Handling & Fallbacks
-- **Problem**: No specification for handling script loading failures or API issues
-- **Solution**: Add requirements for:
-  - Graceful fallback when OpenAI API fails
-  - Clear error messages for missing dependencies
-  - Progressive loading with visual feedback
-  - Fallback AI behavior when API is unavailable
+**Error Handling**: Include graceful fallback when OpenAI API fails, clear error messages, WebGL support detection, and responsive design for mobile/tablet/desktop.
 
-### Browser Compatibility
-- **Problem**: "Scale according to browser size" was too vague
-- **Solution**: Specify:
-  - Responsive design breakpoints for mobile/tablet/desktop
-  - WebGL support detection and fallback
-  - Touch controls for mobile devices
-  - Minimum browser requirements (WebGL, ES6 support)
-
-### Performance Considerations
-- **Additional Requirements**:
-  - Optimize Three.js asset loading
-  - Implement proper memory management for 3D objects
-  - Add loading progress indicators for large assets
-  - Use efficient rendering techniques for smooth gameplay
-
-### Content Management
-- **Problem**: Game content conflicts with site navigation
-- **Solution**: Specify CSS overrides to hide site elements during gameplay
-- **Improvement**: "Ensure game takes full control of viewport when active, hiding all site navigation and content"
+**Performance**: Optimize Three.js loading, implement proper memory management, add loading indicators, and ensure smooth 60fps gameplay.
