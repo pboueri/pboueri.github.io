@@ -1,7 +1,5 @@
 # Hysterai Prompt
 
-**GENERATED** - 2024-12-21 - COMPLETED SUCCESSFULLY
-
 Hysterai is meant to capture the inevitability of AI and how it will catch up to us. Modeled after the myth of sisyphus, the concept art / game is a first person game where the character attempts to walk up the hill to reach the top and their goal, where they win. Behind them if they were to turn around is an amoeba that initially moved very slowly, but slowly grows over time. The amoeba represents AI and is able to change the rules of the game as it goes. This makes it hard for you to reach the top of the hill, as the amoeba seeks to consume you. Ultimately it does so and the screens goes black, with voices of others who have tried to reach the top all around you. 
 
 Opening Page:
@@ -59,3 +57,58 @@ Instructions for generating:
 - Ensure the JavaScript is copied to the right folder and keep track of MIME type issues.
 - Name the prompt "hysterai.md" different than the project. Call it "hysteriai_prompt" just so it doesn't get routed in the wrong place when knitting the Hugo.
 - Ensure that the game renders in all different types of window browsers. Scale the game according to the browser size.
+
+## Lessons Learned & Prompt Improvements
+
+Based on implementation experience, the following improvements should be made to this prompt:
+
+### Hugo Integration Issues
+- **Problem**: Hugo wraps content in layouts, causing conflicts with full-screen games
+- **Solution**: Specify that a custom Hugo layout (`layouts/projects/hysterai.html`) should be created that renders raw HTML content using `{{ .RawContent | safeHTML }}`
+- **Improvement**: Add explicit instruction: "Create a custom Hugo layout that bypasses the default site layout to allow full-screen game experience"
+
+### Testing & Debugging Requirements
+- **Problem**: No clear testing methodology specified for debugging integration issues
+- **Solution**: Replace cheerio.js instruction (not applicable in Hugo context) with:
+  - "Test the game loading process with browser developer console"
+  - "Add debug logging to track initialization steps"
+  - "Verify all static assets are correctly served by Hugo"
+  - "Test game functionality end-to-end before considering complete"
+
+### File Structure Clarity
+- **Problem**: Ambiguity about where JavaScript files should be placed and copied
+- **Solution**: Specify explicit file structure:
+  ```
+  assets/projects/hysterai/*.js (source files)
+  static/assets/projects/hysterai/*.js (served files - copy from assets)
+  content/projects/hysterai/index.html (game page with Hugo front matter)
+  layouts/projects/hysterai.html (custom layout)
+  ```
+
+### Error Handling & Fallbacks
+- **Problem**: No specification for handling script loading failures or API issues
+- **Solution**: Add requirements for:
+  - Graceful fallback when OpenAI API fails
+  - Clear error messages for missing dependencies
+  - Progressive loading with visual feedback
+  - Fallback AI behavior when API is unavailable
+
+### Browser Compatibility
+- **Problem**: "Scale according to browser size" was too vague
+- **Solution**: Specify:
+  - Responsive design breakpoints for mobile/tablet/desktop
+  - WebGL support detection and fallback
+  - Touch controls for mobile devices
+  - Minimum browser requirements (WebGL, ES6 support)
+
+### Performance Considerations
+- **Additional Requirements**:
+  - Optimize Three.js asset loading
+  - Implement proper memory management for 3D objects
+  - Add loading progress indicators for large assets
+  - Use efficient rendering techniques for smooth gameplay
+
+### Content Management
+- **Problem**: Game content conflicts with site navigation
+- **Solution**: Specify CSS overrides to hide site elements during gameplay
+- **Improvement**: "Ensure game takes full control of viewport when active, hiding all site navigation and content"
