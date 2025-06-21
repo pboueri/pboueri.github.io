@@ -66,24 +66,54 @@ Amoeba Abilities:
     - Increase the amoeba's speed by a little (increments of 0.02-0.05)
 
 Instructions for generating:
-- Use Three.js
+- Use Three.js CDN version r128 or higher (https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js)
+- CRITICAL: Only use Three.js geometries available in r128 - avoid CapsuleGeometry (use CylinderGeometry instead)
+- CRITICAL: Test all Three.js constructors for compatibility with the specified CDN version
+- CRITICAL: When creating complex nested geometries (like tentacles), store mesh references properly to avoid accessing undefined children arrays
 - Generate your own assets in your own assets folder. If you're unable to, create a stub for the image to be placed later. Keep the number of assets to a minimal amount (less than 20). Use code to generate the other shapes
 - All the code generated must be isolated to content/projects/hysterai
-- All the assets must be isolated to assets/projects/hysterai
+- All the assets must be isolated to static/assets/projects/hysterai (NOT assets/projects/hysterai)
 - Break down the task into steps and execute those steps. This should be a one shot generation with no intermediate states.
-- Seperate out the game engine into distinct js files and knit them together with hugo into the main index file
-- Use cheerio.js to inspect the output after rendering with hugo and validate it looks correct to spec. If you see any bugs make note of them and fix them until it seems all good.
-- Ensure the JavaScript is copied to the right folder and keep track of MIME type issues.
-- Name the prompt "hysterai.md" different than the project. Call it "hysteriai_prompt" just so it doesn't get routed in the wrong place when knitting the Hugo.
+- Separate out the game engine into distinct js files and knit them together with hugo into the main index file
+- CRITICAL: Do not reference any external files that don't exist (utils.js, heuristicsRedefinitions.js, etc.)
+- CRITICAL: Ensure all JavaScript files are self-contained with no external dependencies beyond Three.js CDN
+- CRITICAL: When adding child objects to meshes, store direct references rather than relying on children array indices
+- Ensure the JavaScript is copied to the right folder (static/assets/projects/hysterai/) and keep track of MIME type issues.
+- Name the prompt "hysterai.md" different than the project. Call it "hysterai_prompt" just so it doesn't get routed in the wrong place when knitting the Hugo.
 - Ensure that the game renders in all different types of window browsers. Scale the game according to the browser size.
 - CRITICAL: Fix terrain rendering issues - ensure the ground is visible and all objects are properly positioned on the terrain surface
 - CRITICAL: Ensure the OpenAI model dropdown uses the exact models specified: gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, o3, o3-mini, o4-mini
+- CRITICAL: Test Hugo server startup and resolve any port conflicts before deployment
+- CRITICAL: Validate all JavaScript syntax and Three.js API calls before finalizing files
 
 ## Lessons Learned & Prompt Improvements
 
 Based on implementation experience, the following improvements should be made to this prompt:
 
-### Critical Fixes Required
+### Critical Technical Fixes Required
+
+**Three.js Compatibility**: CRITICAL JavaScript errors occur due to API incompatibility:
+- THREE.CapsuleGeometry does not exist in r128 - use THREE.CylinderGeometry instead
+- Always verify Three.js constructor availability in specified CDN version
+- Test all geometry types before using them in the implementation
+- Specify exact CDN version in prompt to avoid compatibility issues
+
+**Object Reference Management**: CRITICAL errors when building complex 3D objects:
+- When creating nested geometries (tentacles), store mesh references in arrays before using them
+- DO NOT use `group.children[i-1].add()` directly - store segment references separately
+- Example: `const segmentMeshes = []; segmentMeshes.push(segment); segmentMeshes[i-1].add(segment);`
+- Always test object hierarchy creation to avoid "Cannot read properties of undefined" errors
+
+**File Structure**: File loading errors prevent game initialization:
+- JavaScript files must be in static/assets/projects/hysterai/ (not assets/)
+- Do not reference non-existent files (utils.js, heuristicsRedefinitions.js, extensionState.js)
+- Ensure all JavaScript is self-contained with no external dependencies
+- Test file serving paths before finalizing implementation
+
+**Hugo Server Issues**: Port conflicts prevent testing:
+- Always kill existing Hugo processes before starting new server
+- Include server cleanup instructions in deployment steps
+- Test build process separate from server startup
 
 **Terrain Rendering**: The terrain/hill is not rendering properly in the initial implementation. Ensure:
 - The terrain geometry is properly created and visible
@@ -122,3 +152,45 @@ Based on implementation experience, the following improvements should be made to
 **Error Handling**: Include graceful fallback when OpenAI API fails, clear error messages, WebGL support detection, and responsive design for mobile/tablet/desktop.
 
 **Performance**: Optimize Three.js loading, implement proper memory management, add loading indicators, and ensure smooth 60fps gameplay.
+
+### Pre-Implementation Validation Checklist
+
+Before generating any code, validate:
+
+1. **Three.js API Compatibility**:
+   - Check Three.js r128 documentation for all geometry types
+   - Verify all Three.js constructors exist in the specified version
+   - Use alternatives for missing APIs (CylinderGeometry instead of CapsuleGeometry)
+
+2. **Object Hierarchy Design**:
+   - Plan complex nested object creation (tentacles, arms, etc.)
+   - Use explicit mesh reference arrays for parent-child relationships
+   - Never rely on group.children array indices for adding objects
+
+3. **File Structure Verification**:
+   - Confirm all JavaScript files go to static/assets/projects/hysterai/
+   - Ensure no references to non-existent external files
+   - Test file serving paths match Hugo static file conventions
+
+4. **Dependencies Check**:
+   - Only use Three.js CDN and native JavaScript
+   - No external libraries beyond what's explicitly included
+   - Self-contained modules with no missing imports
+
+5. **Build Process Validation**:
+   - Test Hugo build process (hugo --buildDrafts)
+   - Verify server startup without port conflicts
+   - Confirm all assets are properly served
+
+### Post-Implementation Testing Requirements
+
+After code generation, must verify:
+
+1. **Hugo Build Success**: `hugo --buildDrafts` completes without errors
+2. **File Serving**: All JavaScript files accessible via HTTP
+3. **Console Clean**: No JavaScript errors in browser console
+4. **Game Initialization**: Title screen loads and accepts input
+5. **Three.js Loading**: All 3D objects render without geometry errors
+6. **Object Hierarchy**: Complex objects (amoeba tentacles) create without reference errors
+
+**If any validation fails, fix the specific issue before proceeding to the next component.**

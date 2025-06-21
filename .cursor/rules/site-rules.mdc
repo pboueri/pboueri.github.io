@@ -10,7 +10,7 @@ These are the guidelines that shape how you should design the website. You shoul
 - For any authentication required -- prompt the user on the frontend to provide API keys instead of assuming they're set in the environenet
 - After any large piece of work check that the static site is well formatted and can be served
 - Design the site so each project is in a particular link or area from the homepage. Keep the homepage as an index to other parts of the site. 
-- Keep all assets in the assets directory with a logical structure that maps to each individual subpage of the homepage or project
+- Keep all assets in the static/assets directory with a logical structure that maps to each individual subpage of the homepage or project
 - Only use Hugo to generate the site
 - After every long generation, validate that hugo can build
 - When creating games, you must use Three.js as the core game engine
