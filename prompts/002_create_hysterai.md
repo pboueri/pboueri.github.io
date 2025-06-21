@@ -7,7 +7,7 @@ Opening Page:
 - A button that says play
 - A box to enter an OpenAI key -- required to play
 - A drop down for which openai model to use (include latest models: gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, o3, o3-mini, o4-mini) - ENSURE THESE EXACT MODELS ARE USED
-- A difficulty slider for "Amoeba Aggression" (Easy: 15s intervals, Medium: 10s intervals, Hard: 5s intervals, Nightmare: 3s intervals) to control how often the amoeba takes actions
+- A difficulty slider for "Amoeba Aggression" to control how often the amoeba takes actions
 
 Gameplay:
 - The character is moved with the arrow keys up/left/down/right
@@ -41,6 +41,7 @@ Environment:
 - CRITICAL: The terrain must extend properly in all directions with visible ground geometry, not appear as a flat line on the horizon
 - The hill/terrain must be clearly visible with proper geometry and texturing
 - CRITICAL: Camera positioning must be at ground level (terrain height + 1.5 units) to give proper first-person perspective of walking on ground
+- CRITICAL: the player must not start on the hill, the hill should be away from them in the distance with the flag on top of it
 
 Amoeba Design & Behavior:
 - The amoeba should NOT be a simple purple orb - it should be a more realistic, organic, blob-like creature
@@ -51,16 +52,14 @@ Amoeba Design & Behavior:
 - Should have a more menacing appearance with darker colors (dark purples, blacks, with glowing edges)
 - Consider using animated vertex shaders for more organic movement
 - CRITICAL: The amoeba should move at a speed that makes it a real threat - it should be able to catch up to the player if they don't actively try to escape
-- Initial speed should be around 0.08-0.12 (increased from previous implementations that were too slow)
-- The amoeba should be challenging and require the player to run away actively
 - CRITICAL: Amoeba must be fast enough to create genuine tension - players should feel the urgency to escape
 
 Amoeba Abilities:
 - It can move forward to reach the player at a threatening pace
 - It must be big enough (the size of the player) to consume the player
 - Each action is to be taken by invoking OpenAI. An appropriate game state is sent to OpenAI, and OpenAI responds with the appropriate next action for the amoeba
-- The amoeba starts at a moderate speed (0.08-0.12) to make it a real threat
-- Actions should be taken based on difficulty setting: Easy (15s), Medium (10s), Hard (5s), Nightmare (3s)
+- The amoeba starts at a moderate speed to make it a real threat
+- Actions should be taken based on difficulty setting: Easy (3s), Medium (2s), Hard (1s), Nightmare (0.5s)
 - CRITICAL: Implement difficulty slider that controls amoeba action frequency for varying challenge levels
 - The amoeba can move left/right/up/down
 - It can change the rules of the game by:
@@ -85,8 +84,6 @@ Amoeba Abilities:
 
 **Must Include:**
 - OpenAI models: gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, o3, o3-mini, o4-mini
-- Difficulty slider: Easy (3s), Medium (2s), Hard (1s), Nightmare (0.5s)
-- Amoeba speed: 0.08-0.12 minimum for genuine threat
 - Camera at ground level (terrain height + 1.5 units max)
 - Flag at actual hill peak, not offset
 
@@ -94,10 +91,7 @@ Amoeba Abilities:
 
 **Critical Checks:**
 1. Hugo build succeeds: `hugo --buildDrafts`
-2. Flag positioned at hill peak (0, 0, -40) - not offset
-3. Amoeba visible from start at position (0, 5, 25)
-4. Camera at ground level - no floating player
-5. Amoeba fast enough (0.08-0.12+) to create genuine threat
-6. All JavaScript files load without errors
-7. OpenAI integration works with specified models
-8. Difficulty slider controls amoeba aggression properly
+2. Camera at ground level - no floating player
+3. All JavaScript files load without errors
+4. OpenAI integration works with specified models
+5. Difficulty slider controls amoeba aggression properly
