@@ -1,0 +1,103 @@
+---
+description: A rule set for when developing games in Three.js
+globs: 
+alwaysApply: false
+---
+# Three.js Game Development Rules
+
+## Core Principles
+- **Always use Three.js as the core game engine**
+- **Keep games client-side only** - no backend server dependencies
+- **Optimize for web delivery** - compress assets and minimize bundle size
+- **Support multiple devices** - mobile, tablet, and desktop
+
+## Architecture Guidelines
+
+### Project Structure
+- Use modular, component-based architecture
+- Separate game logic, rendering, and input handling
+- Implement scene management for different game states
+- Create reusable components for game objects
+
+### Performance Requirements
+- Target 60 FPS on modern devices
+- Use object pooling for frequently created/destroyed objects
+- Implement frustum culling and LOD (Level of Detail)
+- Limit draw calls through geometry merging and instancing
+- Always use `requestAnimationFrame` for game loops
+- Implement delta time for smooth movement
+
+### Memory Management
+- Always call `dispose()` on textures, geometries, and materials
+- Use object pooling for particles and temporary objects
+- Monitor memory usage with browser dev tools
+- Implement proper cleanup on scene transitions
+
+## Asset Management
+- Preload critical assets before game start
+- Use texture atlasing to reduce draw calls
+- Compress textures and optimize 3D models for web
+- Implement progressive loading for large assets
+- Store all game assets in `static/assets/[game-name]/`
+
+## Input and Controls
+- Create centralized input manager
+- Support keyboard, mouse, touch, and gamepad
+- Implement smooth camera controls with constraints
+- Add customizable keybindings
+- Debounce inputs to prevent spam
+
+## Audio Integration
+- Use Three.js Audio classes for 3D spatial audio
+- Implement audio pooling to prevent memory leaks
+- Provide volume controls (master, SFX, music)
+- Preload critical sound effects
+- Support multiple audio formats for browser compatibility
+
+## Mobile Optimization
+- Reduce polygon count for mobile devices
+- Use compressed texture formats (ETC1, PVRTC)
+- Implement intuitive touch controls
+- Handle different screen orientations
+- Detect device capabilities and adjust quality accordingly
+
+## Physics and Collision
+- Choose appropriate physics library (Cannon.js, Ammo.js, or custom)
+- Use simple collision shapes (AABB, spheres) when possible
+- Implement spatial partitioning for large worlds
+- Use fixed timestep for consistent physics
+
+## Code Quality
+- Use ES6+ features (modules, classes, async/await)
+- Implement comprehensive error handling
+- Add meaningful comments for complex logic
+- Use TypeScript for larger projects
+- Follow consistent naming conventions
+
+## Development and Testing
+- Use browser dev tools for debugging
+- Implement Stats.js for performance monitoring
+- Test across multiple browsers and devices
+- Use wireframe mode and debug helpers during development
+- Implement user feedback systems
+
+## Deployment
+- Minify and compress all assets
+- Use CDNs for Three.js and common libraries
+- Implement service workers for offline capabilities
+- Make games installable as PWAs
+- Ensure responsive design for all screen sizes
+
+## Security
+- Validate all user inputs
+- Implement basic anti-cheat for competitive games
+- Use localStorage/IndexedDB for save data
+- Encrypt sensitive game data
+- Follow privacy regulations (GDPR, etc.)
+
+## Hugo Integration
+- Create dedicated layout templates for games
+- Implement proper meta tags and descriptions
+- Ensure games work with Hugo's static site generation
+- Add games to the main navigation structure
+- Provide clear instructions and controls for each game
