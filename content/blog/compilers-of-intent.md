@@ -83,6 +83,28 @@ Right now all our agentic coding suffers from a key shortcoming that has plagued
 
 I strongly believe this is the way we will be building software in the near future. The art of building these systems will be how we decompose the problem, verify the functionality, and define our intent such that the system is tractable and well specified... same as it ever was. 
 
+## What a good PromptMake porduct look like?
+
+A really well developed product would allow a user to bridge the gap from local to cloud, offloading long running tasks and caching them for others, similar to [Bazel](https://bazel.build/remote/caching), with a team first mindset of allowing many people to contribute new intents towards a vision. 
+
+It would have a clear way of developing new intents and writing them out, removing boiler plate and distilling down essence. With the project context and vision, it would enable the author to go quickly and allow for serendipity as intent crystalizes to prompts with helpful suggestions.
+
+It would have a first class editor that helps specify validations as precisely or loosely as required, and fix them as needed. 
+
+It would support iterative feedback loops to allow someone to tweak as needed, with an incremental or full rebuild, refining the prompts and validations to get to the desired output. Didn't like a generated output -- prompt it to change what you want and the system bakes it into the prior prompts as optimally as possible.
+
+It would support a cost-conscious rebuild cycle, with the option to rebuild from a fresh slate to create new coherent outputs. 
+
+It would allow for migrations to new agents or technologies with the ease of a single build, without the need for much toil, blowing away all code and rebuilding it from scratch. 
+
+It would be "state" aware and know what's hard to change and migrate (like databases), and what's stateful and easy to migrate. 
+
+It would allow for a CI/CD deployment cycle with integrated analytics and A/B tests, allowing new builds to replace old builds in blue green or hypothesis based rollouts. 
+
+It would be able to introspect its own complexity and refine and fuse rules and intents into a project level specification independent of any particular prompt. 
+
+It would feel smart. 
+
 ## Future
 
 As agents get more competent and the miss rate goes down and their speed goes up and our media of how we can communicate with them changes, the loop of intent will get tighter and tighter and tighter. There is a natural speed limit to how fast we can express what we want and how fast we can evaluate things. What that speed lemon is we don't know. Does the world even need all this stuff, we don't know. But it seems like progress is inexorably getting closer to this end point. 

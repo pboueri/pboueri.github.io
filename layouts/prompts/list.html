@@ -12,13 +12,24 @@
         <p style="color: #666; margin-bottom: 2rem;">These are the prompts stored in the <code>prompts/</code> directory that were used to generate parts of this site.</p>
         
         <!-- We'll list the prompts from the file system -->
-        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 6px; border-left: 4px solid #007acc;">
+        {{ range .Pages.ByDate }}
+        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 6px; border-left: 4px solid #007acc; margin-bottom: 1rem;">
             <h3 style="margin-bottom: 1rem;">
-                <a href="/prompts/001/" style="color: #007acc; text-decoration: none;">001 - Create Personal Site</a>
+                <a href="{{ .RelPermalink }}" style="color: #007acc; text-decoration: none;">{{ .Title }}</a>
             </h3>
-            <p style="color: #666; margin-bottom: 0.5rem;">Status: <span style="color: #28a745; font-weight: bold;">GENERATED ✓</span></p>
-            <p>The foundational prompt used to create the initial structure of this Hugo-based personal website.</p>
+            {{ if .Params.status }}
+            <p style="color: #666; margin-bottom: 0.5rem;">Status: <span style="color: #28a745; font-weight: bold;">{{ .Params.status }} ✓</span></p>
+            {{ end }}
+            {{ if .Date }}
+            <p style="color: #666; margin-bottom: 0.5rem;">Date: {{ .Date.Format "January 2, 2006" }}</p>
+            {{ end }}
+            {{ if .Params.description }}
+            <p>{{ .Params.description }}</p>
+            {{ else }}
+            <p>{{ .Summary }}</p>
+            {{ end }}
         </div>
+        {{ end }}
     </div>
 </div>
 {{ end }} 
