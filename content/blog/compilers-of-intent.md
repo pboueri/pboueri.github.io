@@ -30,8 +30,32 @@ Any formal system defines its terms:
 Succintly a person has a vision, which they seek via incremental dependent intents via prompts. These prompts are interpreted by an Agent to create an Output. The Outputs are validated and if found to be deficient, are refined until they achieve the overall goal of the intent. 
 
 
-The above is _very_ similar to another system of compilation -- [GNU Make](https://www.gnu.org/software/make/). Here rules define targets which are compiled to create a final output. 
 
 ## PromptMake 
 
-To tame the stochastic, and vibe based agentic future, we should structure our products as discrete 
+The above is _very_ similar to another system of compilation -- [GNU Make](https://www.gnu.org/software/make/). Here rules define targets which are compiled to create a final output. 
+
+So what about PromptMake? Something that allows a prompt sturcture of the following
+
+
+```yaml
+---
+name: prompt-005
+inputs: 
+    prompt-001 # Defines the required input prompts
+    prompt-003
+targets:
+    A javascript game called hysterai that is playable as static javascript game
+---
+prompt:
+    _the whole description of Hysterai goes here
+```
+
+With a folder of files like the above you can create a DAG that generates targets. The most difficult part of PromptMake is specifying the Validation. How do you know the generation worked? If you break down the task too narrowly you'd have too many prompts. 
+
+
+
+
+# Inspiration
+- Make
+- Flyaway

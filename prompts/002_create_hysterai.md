@@ -7,6 +7,7 @@ Opening Page:
 - A button that says play
 - A box to enter an OpenAI key -- required to play
 - A drop down for which openai model to use (include latest models: gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, o3, o3-mini, o4-mini) - ENSURE THESE EXACT MODELS ARE USED
+- A difficulty slider for "Amoeba Aggression" (Easy: 15s intervals, Medium: 10s intervals, Hard: 5s intervals, Nightmare: 3s intervals) to control how often the amoeba takes actions
 
 Gameplay:
 - The character is moved with the arrow keys up/left/down/right
@@ -34,9 +35,12 @@ Environment:
 - Solid ground that the player can clearly see and walk on with proper collision detection
 - A hill that has a flag for "goal" at the top of it
 - Ensure terrain is properly lit and visible (not blending with sky color)
-- CRITICAL: Ensure the terrain floor is visible and rendered properly - the player must be able to see the ground they're walking on
+- CRITICAL: Fix terrain rendering - player must not appear to be floating in air. The camera should be positioned close to the ground (1-2 units above terrain surface)
+- CRITICAL: Ensure the terrain floor is visible and rendered properly with proper perspective - the player must be able to see the ground they're walking on extending into the distance
 - CRITICAL: All objects (player, amoeba, trees, rocks, flag) must be positioned ON the terrain floor, not floating in air
+- CRITICAL: The terrain must extend properly in all directions with visible ground geometry, not appear as a flat line on the horizon
 - The hill/terrain must be clearly visible with proper geometry and texturing
+- CRITICAL: Camera positioning must be at ground level (terrain height + 1.5 units) to give proper first-person perspective of walking on ground
 
 Amoeba Design & Behavior:
 - The amoeba should NOT be a simple purple orb - it should be a more realistic, organic, blob-like creature
@@ -47,15 +51,17 @@ Amoeba Design & Behavior:
 - Should have a more menacing appearance with darker colors (dark purples, blacks, with glowing edges)
 - Consider using animated vertex shaders for more organic movement
 - CRITICAL: The amoeba should move at a speed that makes it a real threat - it should be able to catch up to the player if they don't actively try to escape
-- Initial speed should be around 0.05-0.08 (much faster than previous 0.02)
+- Initial speed should be around 0.08-0.12 (increased from previous implementations that were too slow)
 - The amoeba should be challenging and require the player to run away actively
+- CRITICAL: Amoeba must be fast enough to create genuine tension - players should feel the urgency to escape
 
 Amoeba Abilities:
 - It can move forward to reach the player at a threatening pace
 - It must be big enough (the size of the player) to consume the player
 - Each action is to be taken by invoking OpenAI. An appropriate game state is sent to OpenAI, and OpenAI responds with the appropriate next action for the amoeba
-- The amoeba starts at a moderate speed (0.05-0.08) to make it a real threat
-- Actions should be taken every 8-12 seconds initially, not every 15 seconds
+- The amoeba starts at a moderate speed (0.08-0.12) to make it a real threat
+- Actions should be taken based on difficulty setting: Easy (15s), Medium (10s), Hard (5s), Nightmare (3s)
+- CRITICAL: Implement difficulty slider that controls amoeba action frequency for varying challenge levels
 - The amoeba can move left/right/up/down
 - It can change the rules of the game by:
     - Inverting or rotating the viewport of the player
@@ -85,6 +91,10 @@ Instructions for generating:
 - CRITICAL: Ensure the OpenAI model dropdown uses the exact models specified: gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, o3, o3-mini, o4-mini
 - CRITICAL: Test Hugo server startup and resolve any port conflicts before deployment
 - CRITICAL: Validate all JavaScript syntax and Three.js API calls before finalizing files
+- CRITICAL: Fix terrain perspective issues - ensure camera is positioned at proper ground level (terrain height + 1.5 units max)
+- CRITICAL: Implement difficulty slider UI on start screen with labels: Easy, Medium, Hard, Nightmare
+- CRITICAL: Amoeba speed must be increased to 0.08-0.12 minimum to create genuine threat
+- CRITICAL: Terrain geometry must render with proper perspective showing ground extending to horizon, not appearing as flat line
 
 ## Lessons Learned & Prompt Improvements
 
@@ -115,12 +125,15 @@ Based on implementation experience, the following improvements should be made to
 - Include server cleanup instructions in deployment steps
 - Test build process separate from server startup
 
-**Terrain Rendering**: The terrain/hill is not rendering properly in the initial implementation. Ensure:
-- The terrain geometry is properly created and visible
-- Ground collision detection works correctly
+**Terrain Rendering**: CRITICAL FIXES NEEDED - The terrain/hill is not rendering properly, causing floating appearance. Ensure:
+- The terrain geometry is properly created and visible with correct camera positioning
+- Player camera must be positioned at terrain height + 1.5 units maximum for proper ground-level perspective
+- Ground collision detection works correctly with proper height sampling
 - All objects are positioned on the terrain surface, not floating
-- Proper lighting makes the terrain clearly visible
-- The hill shape is obvious and climbable
+- Proper lighting makes the terrain clearly visible with ground extending into distance
+- The terrain must be large enough and properly oriented (rotate PlaneGeometry -90 degrees on X-axis)
+- CRITICAL: Fix camera positioning so player appears to walk ON the ground, not float above it
+- The hill shape is obvious and climbable with proper slope geometry
 
 **Amoeba Design**: The amoeba appears as a simple purple orb. Improve by:
 - Creating a more complex, organic blob-like appearance
@@ -129,10 +142,11 @@ Based on implementation experience, the following improvements should be made to
 - Making it more visually threatening and realistic
 
 **Game Balance**: The amoeba is too slow and non-threatening. Fix by:
-- Increasing initial speed to 0.05-0.08
-- Reducing action intervals to 8-12 seconds
+- Increasing initial speed to 0.08-0.12 (previous implementations were too slow)
+- Implementing difficulty slider for action intervals: Easy (15s), Medium (10s), Hard (5s), Nightmare (3s)
 - Making the amoeba genuinely able to catch the player
 - Ensuring players must actively flee to survive
+- CRITICAL: Add difficulty selection UI on start screen for varying challenge levels
 
 **Timer**: Change from 3 minutes to 1 minute for more intense gameplay
 
@@ -192,5 +206,9 @@ After code generation, must verify:
 4. **Game Initialization**: Title screen loads and accepts input
 5. **Three.js Loading**: All 3D objects render without geometry errors
 6. **Object Hierarchy**: Complex objects (amoeba tentacles) create without reference errors
+7. **CRITICAL: Terrain Perspective**: Player camera positioned at ground level, not floating above terrain
+8. **CRITICAL: Difficulty Slider**: Start screen includes functioning difficulty selector for amoeba aggression
+9. **CRITICAL: Amoeba Speed**: Amoeba moves fast enough (0.08-0.12+) to create genuine threat requiring active evasion
+10. **CRITICAL: Ground Visibility**: Terrain extends visibly to horizon with proper perspective, not flat line appearance
 
 **If any validation fails, fix the specific issue before proceeding to the next component.**
