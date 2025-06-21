@@ -78,9 +78,10 @@ Amoeba Abilities:
 - Store mesh references properly when creating complex geometries
 - Self-contained JavaScript files with no external dependencies
 
-**File Structure:**
+**File Structure To Generate:**
 - Content: `content/projects/hysterai.md`
 - Layout: `layouts/projects/hysterai.html` using `{{ .RawContent | safeHTML }}`
+- Code Assets `static/assets/hysterai/` and all the .js files needed go here
 
 **Must Include:**
 - OpenAI models: gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, o3, o3-mini, o4-mini
