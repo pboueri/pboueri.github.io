@@ -42,9 +42,6 @@ Environment:
 - CRITICAL: Ensure the terrain floor is visible and rendered properly with proper perspective - the player must be able to see the ground they're walking on extending into the distance
 - CRITICAL: All objects (player, amoeba, trees, rocks, flag) must be positioned ON the terrain floor, not floating in air
 - CRITICAL: The terrain must extend properly in all directions with visible ground geometry, not appear as a flat line on the horizon
-- CRITICAL: Use MeshLambertMaterial with a bright green color (0x32CD32) for high visibility
-- CRITICAL: Position the terrain plane at y=0 and rotate it to be horizontal (-Math.PI/2 around X axis)
-- CRITICAL: The terrain must be clearly visible - if it's not visible, the game is broken
 - The hill/terrain must be clearly visible with proper geometry and texturing
 - CRITICAL: Camera positioning must be at ground level (terrain height + 1.5 units) to give proper first-person perspective of walking on ground
 - CRITICAL: the player must not start on the hill, the hill should be away from them in the distance with the flag on top of it
@@ -68,7 +65,7 @@ Amoeba Abilities:
 - CRITICAL: Easy mode should be VERY EASY - player should be able to reach the flag without much difficulty
 - Actions should be taken based on difficulty setting: Easy (5s), Medium (3s), Hard (2s), Nightmare (1s)
 - CRITICAL: Implement difficulty slider that controls amoeba action frequency for varying challenge levels
-- CRITICAL: Amoeba should start much further away from player (at least -30 to -40 units behind)
+- CRITICAL: Amoeba should start much further away from player 
 - The amoeba can move left/right/up/down
 - It can change the rules of the game by:
     - Inverting or rotating the viewport of the player
@@ -76,7 +73,7 @@ Amoeba Abilities:
     - Making the player default to crawling or crouching or jumping
     - Decrease the players speed by a little
     - Increase the amoeba's size by a little
-    - Increase the amoeba's speed by a little (increments of 0.005-0.01 only, very small increases)
+    - Increase the amoeba's speed by a little 
 
 ## Implementation Instructions
 
