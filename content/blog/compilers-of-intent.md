@@ -41,21 +41,54 @@ So what about PromptMake? Something that allows a prompt sturcture of the follow
 ```yaml
 ---
 name: prompt-005
+agent: default
 inputs: 
     prompt-001 # Defines the required input prompts
     prompt-003
 targets:
-    A javascript game called hysterai that is playable as static javascript game
+    llm: A javascript game called hysterai that is playable as static javascript game and stored in static/assets/projects
+    manual: true
 ---
 prompt:
     _the whole description of Hysterai goes here
+
+implementation:
+    _instructions on what to cheack and what is learned from each successive run are stored here_
 ```
 
-With a folder of files like the above you can create a DAG that generates targets. The most difficult part of PromptMake is specifying the Validation. How do you know the generation worked? If you break down the task too narrowly you'd have too many prompts. 
+With a folder of files like the above you can create a DAG that generates targets. The most difficult part of PromptMake is specifying the Validation. How do you know the generation worked? If you break down the task too narrowly you'd have too many prompts. Additionally the act of crafting a good prompt is running it, validating the outputs, refining the prompt, and running it again. A sufficiently mature make system would have many methods of validating targets, storing state to prevent regeneration, and paramaterizing the prompts. However suppose we even restrict ourselves to this basic version, then we could imagine a development cycle might look something like this:
+
+```bash
+make prompt-005 agent=claude-4-sonnet
+...generating prompt-001...
+...validated prompt-001...
+...detected prompt-003, not rebuilding...
+...validated prompt-003...
+...generating prompt-005...
+...validated llm rule...
+Does the output look good y/n:
+```
+
+Then you inspect the outputs and respond y/n. If no, it compiles a feedback loop which modifies the input prompt and allows you to regenerate the target. This cycle would allow someone to build increasingly complex products with well structured prompts. 
+
+## Why Bother?
+
+Right now all our agentic coding suffers from a key shortcoming that has plagued build systems of all types. They are wonderful for developing iteratively, but awful for hardened production systems that need to be rebuilt and tested and collaborated on. We're in the jupyter notebook age of Agentic coding, the aws console age. We need more declarative specifications that can be built as a team collaboratively towards a shared vision. I think this approach would have many benefits, and gets the code _out of the way_. When compiling to a lower language, you never even know it's there. Why should we care in this case? Here's what I think a system like PromptMake achieves:
+
+- **Declarative:** Focus on what you want not how to get it. The prompts that capture the intent _are the product_. Not the code. 
+- **Future Proof:** Suppose a much better coding agent comes out tomorrow, can you tear your entire product down and rebuild it in the new hot language, with the new best agent. Sure why not with the current declarative intent of our PromptMake system!
+- **Discrete:** Each prompt would be a distinct intent task, that ideally is large enough to matter, that breaks down how to build up your product again. It tells a clear story
+- **Discipline:** This requires you to be specific about what it is you want and how to get it. So much of prompting is changing how we speak so that we can get what we want
 
 
 
+I strongly believe this is the way we will be building software in the future.
 
 # Inspiration
-- Make
+
+Many software projects have hit on these patterns or anti-patterns in different ways, below is a list that come to mind. 
+
+- GNU Make
 - Flyaway
+- Terraform
+- Jupyter Notebooks

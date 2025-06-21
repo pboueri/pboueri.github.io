@@ -25,9 +25,9 @@ Start State:
 - The amoeba starts smaller than the player
 
 End State:
-- If the timer is 0:00 and the amoeba has not caught you, then it's "
+- If the timer is 0:00 and the amoeba has not caught you, then it's "You've run out of time"
 - If the amoeba catches you, then the end state is "Hysterai"
-- If you reach the flag, it says "Great Job! You must now keep playing forever"
+- If you reach the flag, it says "Great Job! You must now keep playing forever" and the game restarts with an increased amoeba agression
 
 Environment:
 - Color at first, and fades to gray as the minute timer gets closer to 0:00
@@ -71,144 +71,33 @@ Amoeba Abilities:
     - Increase the amoeba's size by a little
     - Increase the amoeba's speed by a little (increments of 0.02-0.05)
 
-Instructions for generating:
-- Use Three.js CDN version r128 or higher (https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js)
-- CRITICAL: Only use Three.js geometries available in r128 - avoid CapsuleGeometry (use CylinderGeometry instead)
-- CRITICAL: Test all Three.js constructors for compatibility with the specified CDN version
-- CRITICAL: When creating complex nested geometries (like tentacles), store mesh references properly to avoid accessing undefined children arrays
-- Generate your own assets in your own assets folder. If you're unable to, create a stub for the image to be placed later. Keep the number of assets to a minimal amount (less than 20). Use code to generate the other shapes
-- All the code generated must be isolated to content/projects/hysterai
-- All the assets must be isolated to static/assets/projects/hysterai (NOT assets/projects/hysterai)
-- Break down the task into steps and execute those steps. This should be a one shot generation with no intermediate states.
-- Separate out the game engine into distinct js files and knit them together with hugo into the main index file
-- CRITICAL: Do not reference any external files that don't exist (utils.js, heuristicsRedefinitions.js, etc.)
-- CRITICAL: Ensure all JavaScript files are self-contained with no external dependencies beyond Three.js CDN
-- CRITICAL: When adding child objects to meshes, store direct references rather than relying on children array indices
-- Ensure the JavaScript is copied to the right folder (static/assets/projects/hysterai/) and keep track of MIME type issues.
-- Name the prompt "hysterai.md" different than the project. Call it "hysterai_prompt" just so it doesn't get routed in the wrong place when knitting the Hugo.
-- Ensure that the game renders in all different types of window browsers. Scale the game according to the browser size.
-- CRITICAL: Fix terrain rendering issues - ensure the ground is visible and all objects are properly positioned on the terrain surface
-- CRITICAL: Ensure the OpenAI model dropdown uses the exact models specified: gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, o3, o3-mini, o4-mini
-- CRITICAL: Test Hugo server startup and resolve any port conflicts before deployment
-- CRITICAL: Validate all JavaScript syntax and Three.js API calls before finalizing files
-- CRITICAL: Fix terrain perspective issues - ensure camera is positioned at proper ground level (terrain height + 1.5 units max)
-- CRITICAL: Implement difficulty slider UI on start screen with labels: Easy, Medium, Hard, Nightmare
-- CRITICAL: Amoeba speed must be increased to 0.08-0.12 minimum to create genuine threat
-- CRITICAL: Terrain geometry must render with proper perspective showing ground extending to horizon, not appearing as flat line
+## Implementation Instructions
 
-## Lessons Learned & Prompt Improvements
+**Essential Requirements:**
+- Use Three.js r128 CDN: https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js
+- Use CylinderGeometry instead of CapsuleGeometry (r128 compatibility)
+- Store mesh references properly when creating complex geometries
+- Self-contained JavaScript files with no external dependencies
 
-Based on implementation experience, the following improvements should be made to this prompt:
+**File Structure:**
+- Content: `content/projects/hysterai.md`
+- Layout: `layouts/projects/hysterai.html` using `{{ .RawContent | safeHTML }}`
 
-### Critical Technical Fixes Required
+**Must Include:**
+- OpenAI models: gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, o3, o3-mini, o4-mini
+- Difficulty slider: Easy (3s), Medium (2s), Hard (1s), Nightmare (0.5s)
+- Amoeba speed: 0.08-0.12 minimum for genuine threat
+- Camera at ground level (terrain height + 1.5 units max)
+- Flag at actual hill peak, not offset
 
-**Three.js Compatibility**: CRITICAL JavaScript errors occur due to API incompatibility:
-- THREE.CapsuleGeometry does not exist in r128 - use THREE.CylinderGeometry instead
-- Always verify Three.js constructor availability in specified CDN version
-- Test all geometry types before using them in the implementation
-- Specify exact CDN version in prompt to avoid compatibility issues
+## Testing & Validation
 
-**Object Reference Management**: CRITICAL errors when building complex 3D objects:
-- When creating nested geometries (tentacles), store mesh references in arrays before using them
-- DO NOT use `group.children[i-1].add()` directly - store segment references separately
-- Example: `const segmentMeshes = []; segmentMeshes.push(segment); segmentMeshes[i-1].add(segment);`
-- Always test object hierarchy creation to avoid "Cannot read properties of undefined" errors
-
-**File Structure**: File loading errors prevent game initialization:
-- JavaScript files must be in static/assets/projects/hysterai/ (not assets/)
-- Do not reference non-existent files (utils.js, heuristicsRedefinitions.js, extensionState.js)
-- Ensure all JavaScript is self-contained with no external dependencies
-- Test file serving paths before finalizing implementation
-
-**Hugo Server Issues**: Port conflicts prevent testing:
-- Always kill existing Hugo processes before starting new server
-- Include server cleanup instructions in deployment steps
-- Test build process separate from server startup
-
-**Terrain Rendering**: CRITICAL FIXES NEEDED - The terrain/hill is not rendering properly, causing floating appearance. Ensure:
-- The terrain geometry is properly created and visible with correct camera positioning
-- Player camera must be positioned at terrain height + 1.5 units maximum for proper ground-level perspective
-- Ground collision detection works correctly with proper height sampling
-- All objects are positioned on the terrain surface, not floating
-- Proper lighting makes the terrain clearly visible with ground extending into distance
-- The terrain must be large enough and properly oriented (rotate PlaneGeometry -90 degrees on X-axis)
-- CRITICAL: Fix camera positioning so player appears to walk ON the ground, not float above it
-- The hill shape is obvious and climbable with proper slope geometry
-
-**Amoeba Design**: The amoeba appears as a simple purple orb. Improve by:
-- Creating a more complex, organic blob-like appearance
-- Adding animated tentacles or pseudopods
-- Using more sophisticated materials and shaders
-- Making it more visually threatening and realistic
-
-**Game Balance**: The amoeba is too slow and non-threatening. Fix by:
-- Increasing initial speed to 0.08-0.12 (previous implementations were too slow)
-- Implementing difficulty slider for action intervals: Easy (15s), Medium (10s), Hard (5s), Nightmare (3s)
-- Making the amoeba genuinely able to catch the player
-- Ensuring players must actively flee to survive
-- CRITICAL: Add difficulty selection UI on start screen for varying challenge levels
-
-**Timer**: Change from 3 minutes to 1 minute for more intense gameplay
-
-**OpenAI Models**: Ensure the exact latest models are used in the dropdown:
-- gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, o3, o3-mini, o4-mini
-
-### Implementation Requirements
-
-**Hugo Integration**: Create a custom Hugo layout (`layouts/projects/hysterai.html`) that bypasses default site styling and renders raw HTML using `{{ .RawContent | safeHTML }}` for full-screen game experience.
-
-**File Structure**: 
-- Source: `assets/projects/hysterai/*.js` 
-- Served: `static/assets/projects/hysterai/*.js` (copy from assets)
-- Content: `content/projects/hysterai.md` with Hugo front matter
-- Layout: `layouts/projects/hysterai.html`
-
-**Error Handling**: Include graceful fallback when OpenAI API fails, clear error messages, WebGL support detection, and responsive design for mobile/tablet/desktop.
-
-**Performance**: Optimize Three.js loading, implement proper memory management, add loading indicators, and ensure smooth 60fps gameplay.
-
-### Pre-Implementation Validation Checklist
-
-Before generating any code, validate:
-
-1. **Three.js API Compatibility**:
-   - Check Three.js r128 documentation for all geometry types
-   - Verify all Three.js constructors exist in the specified version
-   - Use alternatives for missing APIs (CylinderGeometry instead of CapsuleGeometry)
-
-2. **Object Hierarchy Design**:
-   - Plan complex nested object creation (tentacles, arms, etc.)
-   - Use explicit mesh reference arrays for parent-child relationships
-   - Never rely on group.children array indices for adding objects
-
-3. **File Structure Verification**:
-   - Confirm all JavaScript files go to static/assets/projects/hysterai/
-   - Ensure no references to non-existent external files
-   - Test file serving paths match Hugo static file conventions
-
-4. **Dependencies Check**:
-   - Only use Three.js CDN and native JavaScript
-   - No external libraries beyond what's explicitly included
-   - Self-contained modules with no missing imports
-
-5. **Build Process Validation**:
-   - Test Hugo build process (hugo --buildDrafts)
-   - Verify server startup without port conflicts
-   - Confirm all assets are properly served
-
-### Post-Implementation Testing Requirements
-
-After code generation, must verify:
-
-1. **Hugo Build Success**: `hugo --buildDrafts` completes without errors
-2. **File Serving**: All JavaScript files accessible via HTTP
-3. **Console Clean**: No JavaScript errors in browser console
-4. **Game Initialization**: Title screen loads and accepts input
-5. **Three.js Loading**: All 3D objects render without geometry errors
-6. **Object Hierarchy**: Complex objects (amoeba tentacles) create without reference errors
-7. **CRITICAL: Terrain Perspective**: Player camera positioned at ground level, not floating above terrain
-8. **CRITICAL: Difficulty Slider**: Start screen includes functioning difficulty selector for amoeba aggression
-9. **CRITICAL: Amoeba Speed**: Amoeba moves fast enough (0.08-0.12+) to create genuine threat requiring active evasion
-10. **CRITICAL: Ground Visibility**: Terrain extends visibly to horizon with proper perspective, not flat line appearance
-
-**If any validation fails, fix the specific issue before proceeding to the next component.**
+**Critical Checks:**
+1. Hugo build succeeds: `hugo --buildDrafts`
+2. Flag positioned at hill peak (0, 0, -40) - not offset
+3. Amoeba visible from start at position (0, 5, 25)
+4. Camera at ground level - no floating player
+5. Amoeba fast enough (0.08-0.12+) to create genuine threat
+6. All JavaScript files load without errors
+7. OpenAI integration works with specified models
+8. Difficulty slider controls amoeba aggression properly
