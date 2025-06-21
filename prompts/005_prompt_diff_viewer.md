@@ -1,0 +1,3 @@
+# Prompt Diff Viewer
+
+For every prompt that's generated on the site, the user should be able to flip through all the difs as someone goes through it. So there should be, if you were to click into the prompt, arrows that go left and right, which can also be key-binded to the left and right arrows, and then the difs from Git that are rendered with the additions and removals mined from the Git history. These difs should then be viewable by the user as they flip through, starting with the most recent prompt and then allowing you to go backwards in history with left, left, left, left, left, left.

@@ -81,14 +81,17 @@ Right now all our agentic coding suffers from a key shortcoming that has plagued
 - **Discipline:** This requires you to be specific about what it is you want and how to get it. So much of prompting is changing how we speak so that we can get what we want
 
 
+I strongly believe this is the way we will be building software in the near future. The art of building these systems will be how we decompose the problem, verify the functionality, and define our intent such that the system is tractable and well specified... same as it ever was. 
 
-I strongly believe this is the way we will be building software in the future.
+## Future
 
-# Inspiration
+As agents get more competent and the miss rate goes down and their speed goes up and our media of how we can communicate with them changes, the loop of intent will get tighter and tighter and tighter. There is a natural speed limit to how fast we can express what we want and how fast we can evaluate things. What that speed lemon is we don't know. Does the world even need all this stuff, we don't know. But it seems like progress is inexorably getting closer to this end point. 
+
+## Inspiration
 
 Many software projects have hit on these patterns or anti-patterns in different ways, below is a list that come to mind. 
 
-- GNU Make
-- Flyaway
-- Terraform
-- Jupyter Notebooks
+- [GNU Make](https://www.gnu.org/software/make/)
+- [Flyaway](https://github.com/flyway/flyway)
+- [Terraform](https://developer.hashicorp.com/terraform)
+- [Jupyter Notebooks](https://jupyter.org/)
