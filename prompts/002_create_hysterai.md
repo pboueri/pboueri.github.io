@@ -31,14 +31,20 @@ End State:
 
 Environment:
 - Color at first, and fades to gray as the minute timer gets closer to 0:00
-- Visible grass terrain with contrasting colors (dark green terrain against lighter sky)
+- CRITICAL: Terrain must be clearly visible with high contrast colors (bright green terrain against blue sky)
+- CRITICAL: Use PlaneGeometry with proper rotation and positioning to create a visible ground plane
+- CRITICAL: The terrain must be rendered as a visible floor/ground that extends in all directions
+- CRITICAL: Player must be able to see the terrain/ground they are walking on - it cannot be invisible
+- CRITICAL: Ground must have proper lighting and be clearly distinguishable from the sky
 - Solid ground that the player can clearly see and walk on with proper collision detection
 - A hill that has a flag for "goal" at the top of it
-- Ensure terrain is properly lit and visible (not blending with sky color)
 - CRITICAL: Fix terrain rendering - player must not appear to be floating in air. The camera should be positioned close to the ground (1-2 units above terrain surface)
 - CRITICAL: Ensure the terrain floor is visible and rendered properly with proper perspective - the player must be able to see the ground they're walking on extending into the distance
 - CRITICAL: All objects (player, amoeba, trees, rocks, flag) must be positioned ON the terrain floor, not floating in air
 - CRITICAL: The terrain must extend properly in all directions with visible ground geometry, not appear as a flat line on the horizon
+- CRITICAL: Use MeshLambertMaterial with a bright green color (0x32CD32) for high visibility
+- CRITICAL: Position the terrain plane at y=0 and rotate it to be horizontal (-Math.PI/2 around X axis)
+- CRITICAL: The terrain must be clearly visible - if it's not visible, the game is broken
 - The hill/terrain must be clearly visible with proper geometry and texturing
 - CRITICAL: Camera positioning must be at ground level (terrain height + 1.5 units) to give proper first-person perspective of walking on ground
 - CRITICAL: the player must not start on the hill, the hill should be away from them in the distance with the flag on top of it
@@ -55,12 +61,14 @@ Amoeba Design & Behavior:
 - CRITICAL: Amoeba must be fast enough to create genuine tension - players should feel the urgency to escape
 
 Amoeba Abilities:
-- It can move forward to reach the player at a threatening pace
+- It can move forward to reach the player but should start VERY SLOW to allow proper gameplay balance
 - It must be big enough (the size of the player) to consume the player
 - Each action is to be taken by invoking OpenAI. An appropriate game state is sent to OpenAI, and OpenAI responds with the appropriate next action for the amoeba
-- The amoeba starts at a moderate speed to make it a real threat
-- Actions should be taken based on difficulty setting: Easy (3s), Medium (2s), Hard (1s), Nightmare (0.5s)
+- CRITICAL: The amoeba should start at a VERY SLOW speed (0.01-0.02) to ensure Easy mode is actually easy
+- CRITICAL: Easy mode should be VERY EASY - player should be able to reach the flag without much difficulty
+- Actions should be taken based on difficulty setting: Easy (5s), Medium (3s), Hard (2s), Nightmare (1s)
 - CRITICAL: Implement difficulty slider that controls amoeba action frequency for varying challenge levels
+- CRITICAL: Amoeba should start much further away from player (at least -30 to -40 units behind)
 - The amoeba can move left/right/up/down
 - It can change the rules of the game by:
     - Inverting or rotating the viewport of the player
@@ -68,7 +76,7 @@ Amoeba Abilities:
     - Making the player default to crawling or crouching or jumping
     - Decrease the players speed by a little
     - Increase the amoeba's size by a little
-    - Increase the amoeba's speed by a little (increments of 0.02-0.05)
+    - Increase the amoeba's speed by a little (increments of 0.005-0.01 only, very small increases)
 
 ## Implementation Instructions
 
