@@ -87,7 +87,7 @@ I strongly believe this is the way we will be building software in the near futu
 
 A really well developed product would allow a user to bridge the gap from local to cloud, offloading long running tasks and caching them for others, similar to [Bazel](https://bazel.build/remote/caching), with a team first mindset of allowing many people to contribute new intents towards a vision. 
 
-It would have a clear way of developing new intents and writing them out, removing boiler plate and distilling down essence. With the project context and vision, it would enable the author to go quickly and allow for serendipity as intent crystalizes to prompts with helpful suggestions.
+It would have a clear way of developing new intents and writing them out, removing boiler plate and distilling down essence. With the project context and vision, it would enable the author to go quickly and allow for serendipity as intent crystallizes to prompts with helpful suggestions.
 
 It would have a first class editor that helps specify validations as precisely or loosely as required, and fix them as needed. 
 
