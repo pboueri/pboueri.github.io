@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Baibel Tells Me So - Full Screen Game</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background: #000;
+        }
+        
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            text-align: center;
+        }
+        
+        #game-canvas {
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+        
+        #game-ui {
+            display: none;
+        }
+        
+        #timer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 24px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            font-weight: bold;
+        }
+        
+        #dialogue-box {
+            position: absolute;
+            top: 100px;
+            left: 20px;
+            width: 350px;
+            height: 400px;
+            max-height: 60vh;
+            background: rgba(0,0,0,0.85);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            transition: opacity 2s ease-out;
+        }
+        
+        #player-input {
+            position: absolute;
+            bottom: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            max-width: 90%;
+            padding: 15px;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 16px;
+            display: none;
+        }
+        
+        #feelings {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            font-weight: bold;
+        }
+        
+        #instructions {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 16px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        #exit-button {
+            position: absolute;
+            top: 20px;
+            right: 120px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        #exit-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        #fullscreen-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: rgba(0, 255, 255, 0.2);
+            color: #00FFFF;
+            border: 1px solid #00FFFF;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        #fullscreen-button:hover {
+            background: rgba(0, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="loading">
+            <div>Loading The Baibel Tells Me So...</div>
+            <div style="margin-top: 20px; font-size: 16px; opacity: 0.7;">Preparing your journey into isolation...</div>
+        </div>
+        <canvas id="game-canvas"></canvas>
+        
+        <div id="game-ui">
+            <div id="timer">0:00</div>
+            <a href="/projects/baibel/" id="exit-button">Exit Game</a>
+            <div id="dialogue-box"></div>
+            <input id="player-input" type="text" placeholder="Type your response...">
+            <div id="feelings">
+                <div id="feeling-text">You feel content</div>
+            </div>
+            <div id="instructions">
+                WASD: Move | Mouse: Look | E: Talk to NPCs | Click to lock pointer
+            </div>
+            <button id="fullscreen-button" onclick="toggleFullscreen()">Fullscreen</button>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="/assets/baibel/game.js"></script>
+    <script>
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+        
+        // ESC key to exit game
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !document.getElementById('player-input').style.display) {
+                if (confirm('Exit the game?')) {
+                    window.location.href = '/projects/baibel/';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
