@@ -1,0 +1,84 @@
+{{ define "main" }}
+<article class="about-page">
+    <div class="container">
+        {{ .Content }}
+    </div>
+</article>
+
+<style>
+    .about-page {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .about-page h1 {
+        color: #333;
+        margin-bottom: 2rem;
+        font-size: 2.5rem;
+    }
+    
+    .about-page h2 {
+        color: #555;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-size: 1.8rem;
+    }
+    
+    .about-page h3 {
+        color: #666;
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+        font-size: 1.3rem;
+    }
+    
+    .about-page p {
+        line-height: 1.6;
+        margin-bottom: 1rem;
+        color: #444;
+    }
+    
+    .about-page ul {
+        margin-bottom: 1rem;
+        padding-left: 2rem;
+    }
+    
+    .about-page li {
+        margin-bottom: 0.5rem;
+        line-height: 1.6;
+    }
+    
+    .about-page a {
+        color: #0066cc;
+        text-decoration: none;
+    }
+    
+    .about-page a:hover {
+        text-decoration: underline;
+    }
+    
+    .about-page blockquote {
+        border-left: 4px solid #ddd;
+        padding-left: 1rem;
+        margin: 2rem 0;
+        font-style: italic;
+        color: #666;
+    }
+    
+    .about-page hr {
+        border: none;
+        border-top: 1px solid #eee;
+        margin: 2rem 0;
+    }
+    
+    @media (max-width: 768px) {
+        .about-page h1 {
+            font-size: 2rem;
+        }
+        
+        .about-page h2 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+{{ end }}
