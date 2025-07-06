@@ -1,62 +1,56 @@
 ---
 title: "Hysterai"
-date: 2025-06-20T23:40:26-05:00
+date: 2025-07-06
 draft: false
 layout: hysterai
+description: "A Three.js game exploring the inevitability of AI through a modern Sisyphus myth"
+tags: ["games", "three.js", "ai", "interactive"]
 ---
 
-<div id="hysterai-container">
-    <div id="menu-screen" class="screen active">
-        <div class="title-container">
-            <h1 id="game-title">HYSTERIA</h1>
-        </div>
-        <div class="menu-controls">
-            <div class="control-group">
-                <label for="openai-key">OpenAI API Key (Required):</label>
-                <input type="password" id="openai-key" placeholder="sk-..." />
-            </div>
-            <div class="control-group">
-                <label for="openai-model">OpenAI Model:</label>
-                <select id="openai-model">
-                    <option value="gpt-4.1">gpt-4.1</option>
-                    <option value="gpt-4.1-mini">gpt-4.1-mini</option>
-                    <option value="gpt-4.1-nano">gpt-4.1-nano</option>
-                    <option value="o3">o3</option>
-                    <option value="o3-mini">o3-mini</option>
-                    <option value="o4-mini">o4-mini</option>
-                </select>
-            </div>
-            <div class="control-group">
-                <label for="difficulty">Amoeba Aggression:</label>
-                <input type="range" id="difficulty" min="1" max="4" value="2" />
-                <div class="difficulty-labels">
-                    <span>Easy</span>
-                    <span>Medium</span>
-                    <span>Hard</span>
-                    <span>Nightmare</span>
-                </div>
-            </div>
-            <button id="play-btn">PLAY</button>
-        </div>
-    </div>
-    <div id="game-screen" class="screen">
-        <div id="game-ui">
-            <div id="timer">1:00</div>
-            <div id="minimap"></div>
-            <div id="action-log"></div>
-        </div>
-        <div id="game-canvas"></div>
-    </div>
-    <div id="end-screen" class="screen">
-        <div id="end-message"></div>
-        <button id="restart-btn">RESTART</button>
-    </div>
+Race against time and an ever-evolving AI amoeba in this modern take on the myth of Sisyphus. As you struggle to reach the summit, the amoeba learns, adapts, and changes the very rules of the game itself - illustrating the relentless advance of AI that will inevitably catch up to us all.
+
+<div style="text-align: center; margin: 40px 0;">
+    <a href="/projects/hysterai/" class="play-button" style="display: inline-block; padding: 20px 40px; background: #8B00FF; color: #FFF; text-decoration: none; font-size: 24px; font-weight: bold; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: all 0.3s;">
+        PLAY GAME
+    </a>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="/assets/hysterai/game.js"></script>
-<script src="/assets/hysterai/terrain.js"></script>
-<script src="/assets/hysterai/amoeba.js"></script>
-<script src="/assets/hysterai/player.js"></script>
-<script src="/assets/hysterai/ai.js"></script>
-<script src="/assets/hysterai/ui.js"></script>
-<script src="/assets/hysterai/main.js"></script> 
+
+<style>
+.play-button:hover {
+    background: #6B00DD !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.4) !important;
+}
+</style>
+
+## About
+
+Hysterai captures the inevitability of AI through gameplay mechanics where the antagonist - an organic, blob-like amoeba - doesn't just chase you, it actively rewrites the rules. Using OpenAI's API, the amoeba makes intelligent decisions to hinder your progress: inverting controls, distorting your vision, slowing your movement, or growing stronger.
+
+The game asks: can you reach the summit before AI catches up? And even if you do, can you ever truly escape?
+
+## Features
+
+- **AI-Powered Antagonist**: The amoeba uses real AI to decide how to stop you
+- **Dynamic Difficulty**: Choose from Easy to Nightmare modes
+- **Rule-Breaking Mechanics**: The AI can change controls, vision, and physics
+- **Atmospheric Progression**: The world fades from color to grayscale as time runs out
+- **Sisyphean Loop**: Victory only leads to harder challenges
+
+## Controls
+
+- **WASD/Arrow Keys**: Move around
+- **Mouse**: Look around (click to enable pointer lock)
+- **Space**: Jump
+- **Shift**: Crouch
+- **Ctrl+Shift**: Crawl
+
+## Requirements
+
+- An OpenAI API key to enable AI behavior
+- A modern web browser with WebGL support
+- Mouse and keyboard
+
+## Themes Explored
+
+The game serves as a metaphor for humanity's relationship with AI - we run toward our goals while AI advances behind us, not just following but actively changing the landscape. The title itself shifts between "Hysteria" and "Hysterai," representing our oscillation between panic about AI and acceptance of its inevitability.

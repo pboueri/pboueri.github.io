@@ -1,9 +1,10 @@
 # Hysterai Prompt - UPDATED
 
-Hysterai is meant to capture the inevitability of AI and how it will catch up to us. Modeled after the myth of sisyphus, the concept art / game is a first person game where the character attempts to walk up the hill to reach the top and their goal, where they win. Behind them if they were to turn around is an amoeba that initially moves at a moderate pace, but steadily grows over time and becomes more aggressive. The amoeba represents AI and is able to change the rules of the game as it goes. This makes it hard for you to reach the top of the hill, as the amoeba seeks to consume you. The player must actively run away from the amoeba. Ultimately it does so and the screens goes black, with voices of others who have tried to reach the top all around you. 
+Hysterai is meant to capture the inevitability of AI and how it will catch up to us. Modeled after the myth of sisyphus, the concept art / game is a first person game where the character attempts to reach their goal location, where they win. Behind them if they were to turn around is an amoeba that initially moves at a moderate pace, but steadily grows over time and becomes more aggressive. The amoeba represents AI and is able to change the rules of the game as it goes. This makes it hard for you to reach the top of the hill, as the amoeba seeks to consume you. The player must actively run away from the amoeba. Ultimately it does so and the screens goes black, with voices of others who have tried to reach the top all around you. 
 
 Opening Page:
 - An electronic font that switches from Hysteria to Hysterai every so often with static
+- CRITICAL: The main game title must switch between "Hysterai" and "Hysteria" continuously
 - A button that says play
 - A box to enter an OpenAI key -- required to play
 - A drop down for which openai model to use (include latest models: gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, o3, o3-mini, o4-mini) - ENSURE THESE EXACT MODELS ARE USED
@@ -13,10 +14,12 @@ Gameplay:
 - The character is moved with the arrow keys up/left/down/right
 - The character can just with spacebar and crouch with shift and crawl with ctrl+shift
 - The character can turn around with the mouse to point to a different direction. Up moves you in that direction
+- CRITICAL: Mouse look must work properly - moving mouse should rotate the player view smoothly
+- CRITICAL: Implement pointer lock for proper first-person controls
 - The character only sees their arms as they walk and not much else
 
 Interface:
-- A timer that ticks down from 1:00 minute for you to reach the top of the hill
+- A timer that ticks down from 1:00 minute for you to reach the goal
 - A log of the amoeba's actions as it tries to catch up to you including what it has changed
 - A minimap and where you need to reach (the goal), your arrow (the player), and the amoeba (the ai)
 
@@ -37,14 +40,16 @@ Environment:
 - CRITICAL: Player must be able to see the terrain/ground they are walking on - it cannot be invisible
 - CRITICAL: Ground must have proper lighting and be clearly distinguishable from the sky
 - Solid ground that the player can clearly see and walk on with proper collision detection
-- A hill that has a flag for "goal" at the top of it
+- A visible goal location marked by a flag
 - CRITICAL: Fix terrain rendering - player must not appear to be floating in air. The camera should be positioned close to the ground (1-2 units above terrain surface)
 - CRITICAL: Ensure the terrain floor is visible and rendered properly with proper perspective - the player must be able to see the ground they're walking on extending into the distance
 - CRITICAL: All objects (player, amoeba, trees, rocks, flag) must be positioned ON the terrain floor, not floating in air
 - CRITICAL: The terrain must extend properly in all directions with visible ground geometry, not appear as a flat line on the horizon
 - The hill/terrain must be clearly visible with proper geometry and texturing
 - CRITICAL: Camera positioning must be at ground level (terrain height + 1.5 units) to give proper first-person perspective of walking on ground
-- CRITICAL: the player must not start on the hill, the hill should be away from them in the distance with the flag on top of it
+- CRITICAL: the player must not start at the goal location, the goal should be away from them in the distance
+- CRITICAL: Player height must track terrain properly - always maintain consistent height above terrain as it changes
+- CRITICAL: Use proper terrain height calculation to ensure player never clips through or floats above ground
 
 Amoeba Design & Behavior:
 - The amoeba should NOT be a simple purple orb - it should be a more realistic, organic, blob-like creature
@@ -61,6 +66,8 @@ Amoeba Abilities:
 - It can move forward to reach the player but should start VERY SLOW to allow proper gameplay balance
 - It must be big enough (the size of the player) to consume the player
 - Each action is to be taken by invoking OpenAI. An appropriate game state is sent to OpenAI, and OpenAI responds with the appropriate next action for the amoeba
+- CRITICAL: When API call fails, console log the error and execute a random action from the available actions
+- CRITICAL: In fallback mode (when API fails), amoeba should randomly choose between all available actions, not just "move"
 - CRITICAL: The amoeba should start at a VERY SLOW speed (0.01-0.02) to ensure Easy mode is actually easy
 - CRITICAL: Easy mode should be VERY EASY - player should be able to reach the flag without much difficulty
 - Actions should be taken based on difficulty setting: Easy (5s), Medium (3s), Hard (2s), Nightmare (1s)
@@ -91,7 +98,7 @@ Amoeba Abilities:
 **Must Include:**
 - OpenAI models: gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, o3, o3-mini, o4-mini
 - Camera at ground level (terrain height + 1.5 units max)
-- Flag at actual hill peak, not offset
+- Flag positioned at goal location on terrain
 
 ## Testing & Validation
 

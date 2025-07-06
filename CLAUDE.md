@@ -74,6 +74,6 @@ The site automatically deploys to GitHub Pages when pushing to the main branch. 
 ## Important Notes
 
 - No package.json or npm tooling - kept intentionally simple
-- No testing framework - quality assurance is manual
+- No testing framework - quality assurance is manual. However hugo should always build and if it doesnt you should fix it
 - No linting or formatting tools configured
 - The development philosophy emphasizes AI-driven code generation through prompts
