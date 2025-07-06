@@ -1,6 +1,6 @@
 ---
 title: "The Baibel Tells Me So"
-date: 2025-01-05T12:00:00-04:00
+date: 2025-07-05
 description: "A first-person game illustrating AI disintermediation through language barriers and isolation"
 tags: ["game", "three.js", "interactive", "ai", "disintermediation"]
 ---
