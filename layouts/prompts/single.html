@@ -1,0 +1,279 @@
+{{ define "main" }}
+<article class="prompt-container">
+    <h1>{{ .Title }}</h1>
+    
+    <div class="diff-viewer">
+        <div class="diff-controls">
+            <button id="prev-diff" class="diff-nav" aria-label="Previous diff">←</button>
+            <span id="diff-info">Loading...</span>
+            <button id="next-diff" class="diff-nav" aria-label="Next diff">→</button>
+        </div>
+        
+        <div id="diff-content" class="diff-content">
+            <div class="content">
+                {{ .Content }}
+            </div>
+        </div>
+    </div>
+</article>
+
+<style>
+.prompt-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.diff-viewer {
+    margin-top: 2rem;
+}
+
+.diff-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.diff-nav {
+    background: #007acc;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background 0.3s;
+}
+
+.diff-nav:hover:not(:disabled) {
+    background: #005a9e;
+}
+
+.diff-nav:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+#diff-info {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.diff-content {
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    padding: 1rem;
+    background: #fafbfc;
+    min-height: 400px;
+    overflow-x: auto;
+}
+
+.diff-line {
+    font-family: 'Monaco', 'Consolas', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    white-space: pre;
+}
+
+.diff-line.addition {
+    background: #e6ffed;
+    color: #24292e;
+}
+
+.diff-line.addition::before {
+    content: "+ ";
+    color: #28a745;
+}
+
+.diff-line.deletion {
+    background: #ffeef0;
+    color: #24292e;
+}
+
+.diff-line.deletion::before {
+    content: "- ";
+    color: #d73a49;
+}
+
+.diff-line.context {
+    color: #586069;
+}
+
+.diff-header {
+    background: #f1f8ff;
+    color: #0366d6;
+    padding: 0.5rem;
+    margin: -1rem -1rem 1rem -1rem;
+    font-weight: bold;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+.loading {
+    text-align: center;
+    color: #666;
+    padding: 2rem;
+}
+
+.error {
+    color: #d73a49;
+    background: #ffeef0;
+    padding: 1rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const prevBtn = document.getElementById('prev-diff');
+    const nextBtn = document.getElementById('next-diff');
+    const diffInfo = document.getElementById('diff-info');
+    const diffContent = document.getElementById('diff-content');
+    
+    // Store the original content HTML
+    const originalContent = diffContent.innerHTML;
+    
+    let commits = [];
+    let currentIndex = 0;
+    let isShowingCurrent = true;
+    
+    // Get prompt number from page data
+    const promptNum = {{ .File.ContentBaseName }};
+    
+    // Initialize with git history if available
+    initializeHistory();
+    
+    function initializeHistory() {
+        // Get git history from Hugo data
+        {{ if .Site.Data.prompt_history }}
+        {{ $promptNum := .File.ContentBaseName }}
+        {{ $promptNumInt := int $promptNum }}
+        {{ $promptNumStr := printf "%d" $promptNumInt }}
+        {{ $promptHistory := index .Site.Data.prompt_history.prompts $promptNumStr }}
+        {{ if $promptHistory }}
+        commits = JSON.parse({{ $promptHistory | jsonify }});
+        {{ end }}
+        {{ end }}
+        
+        if (commits && commits.length > 0) {
+            // Start by showing current version
+            showCurrentVersion();
+            updateControls();
+        } else {
+            // No git history available
+            showCurrentVersion();
+            diffInfo.textContent = 'Current version (no history available)';
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+        }
+    }
+    
+    function showCurrentVersion() {
+        isShowingCurrent = true;
+        currentIndex = -1;
+        diffContent.innerHTML = originalContent;
+        diffInfo.textContent = commits.length > 0 ? 
+            `Current version (${commits.length} previous version${commits.length !== 1 ? 's' : ''})` : 
+            'Current version';
+    }
+    
+    function showCommit(index) {
+        if (index < 0 || index >= commits.length) return;
+        
+        isShowingCurrent = false;
+        currentIndex = index;
+        const commit = commits[index];
+        
+        // Show commit info (older versions have lower numbers)
+        diffInfo.textContent = `Version ${commits.length - index} of ${commits.length} - ${commit.date}`;
+        
+        // Display the diff
+        let html = `<div class="diff-header">${commit.message}</div>`;
+        
+        if (commit.diff) {
+            const lines = commit.diff.split('\n');
+            lines.forEach(line => {
+                let className = 'context';
+                if (line.startsWith('+++') || line.startsWith('---')) {
+                    className = 'diff-header';
+                } else if (line.startsWith('+')) {
+                    className = 'addition';
+                } else if (line.startsWith('-')) {
+                    className = 'deletion';
+                } else if (line.startsWith('@@')) {
+                    className = 'diff-header';
+                }
+                
+                html += `<div class="diff-line ${className}">${escapeHtml(line)}</div>`;
+            });
+        } else if (commit.content) {
+            // Show full content if no diff available
+            html += `<div class="content">${commit.content}</div>`;
+        }
+        
+        diffContent.innerHTML = html;
+    }
+    
+    function updateControls() {
+        if (commits.length === 0) {
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+            return;
+        }
+        
+        // When showing current version, can only go to previous (older) versions
+        if (isShowingCurrent) {
+            prevBtn.disabled = false;
+            nextBtn.disabled = true;
+        } else {
+            // When showing a commit
+            prevBtn.disabled = currentIndex >= commits.length - 1; // Can't go older than oldest
+            nextBtn.disabled = false; // Can always go forward (either to newer commit or current version)
+        }
+    }
+    
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    // Navigation handlers
+    prevBtn.addEventListener('click', () => {
+        if (isShowingCurrent && commits.length > 0) {
+            // Move to most recent commit
+            showCommit(0);
+        } else if (currentIndex < commits.length - 1) {
+            // Move to older commit
+            showCommit(currentIndex + 1);
+        }
+        updateControls();
+    });
+    
+    nextBtn.addEventListener('click', () => {
+        if (currentIndex === 0) {
+            // Move back to current version
+            showCurrentVersion();
+        } else if (currentIndex > 0) {
+            // Move to newer commit
+            showCommit(currentIndex - 1);
+        }
+        updateControls();
+    });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+            prevBtn.click();
+        } else if (e.key === 'ArrowRight') {
+            nextBtn.click();
+        }
+    });
+});
+</script>
+{{ end }}

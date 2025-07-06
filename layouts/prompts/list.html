@@ -12,7 +12,7 @@
         <p style="color: #666; margin-bottom: 2rem;">These are the prompts stored in the <code>prompts/</code> directory that were used to generate parts of this site.</p>
         
         <!-- We'll list the prompts from the file system -->
-        {{ range .Pages.ByDate }}
+        {{ range .Pages.ByDate.Reverse }}
         <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 6px; border-left: 4px solid #007acc; margin-bottom: 1rem;">
             <h3 style="margin-bottom: 1rem;">
                 <a href="{{ .RelPermalink }}" style="color: #007acc; text-decoration: none;">{{ .Title }}</a>

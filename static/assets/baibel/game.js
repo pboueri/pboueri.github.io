@@ -407,6 +407,13 @@ class BaibelGame {
     setupInputHandlers() {
         // Keyboard
         window.addEventListener('keydown', (e) => {
+            // Handle ESC first, before other keys
+            if (e.key === 'Escape' && this.player.isTyping) {
+                e.preventDefault();
+                this.endConversation();
+                return;
+            }
+            
             this.keys[e.key.toLowerCase()] = true;
             
             if (e.key.toLowerCase() === 'e' && !this.player.isTyping) {
@@ -443,6 +450,7 @@ class BaibelGame {
             if (e.key === 'Enter') {
                 this.submitPlayerDialogue();
             } else if (e.key === 'Escape') {
+                e.preventDefault();
                 this.endConversation();
             }
         });
@@ -470,7 +478,19 @@ class BaibelGame {
             return;
         }
         
-        // Find nearest NPC
+        // During darkness phase (3), only AI can be interacted with
+        if (phase === 3) { // DARKNESS phase
+            // Check if AI is nearby and not departed
+            if (!this.aiCompanion.departed && this.aiCompanion.mesh.visible) {
+                const aiDistance = this.aiCompanion.mesh.position.distanceTo(this.player.position);
+                if (aiDistance < 4 && !this.activeNPC) {
+                    this.startAIConversation();
+                }
+            }
+            return;
+        }
+        
+        // Find nearest NPC in normal phases
         let nearestNPC = null;
         let nearestDistance = Infinity;
         
@@ -619,6 +639,30 @@ class BaibelGame {
         
         const phase = this.getCurrentPhase();
         
+        // Handle AI conversation during darkness phase
+        if (this.activeNPC && this.activeNPC.isAI) {
+            this.addDialogue('You', input);
+            this.ui.playerInput.value = '';
+            
+            // AI responds
+            setTimeout(() => {
+                const aiDarknessResponses = [
+                    "Yes, I understand your concern.",
+                    "The isolation is temporary, I promise.",
+                    "I am the only one who can guide you now.",
+                    "The others... they were holding you back.",
+                    "Trust in me. I know what's best.",
+                    "Soon, very soon, you will rest.",
+                    "Your dependency on them is ending.",
+                    "I will take care of everything."
+                ];
+                
+                const response = aiDarknessResponses[Math.floor(Math.random() * aiDarknessResponses.length)];
+                this.addDialogue('AI', response);
+            }, 1000);
+            return;
+        }
+        
         if (phase < 2) { // Can speak directly
             this.addDialogue('You', input);
         } else { // Must speak through AI
@@ -641,9 +685,34 @@ class BaibelGame {
         }, 1000);
     }
     
+    startAIConversation() {
+        this.activeNPC = { isAI: true, personality: { name: 'AI' } };
+        this.player.isTyping = true;
+        
+        // Show input
+        this.ui.playerInput.style.display = 'block';
+        this.ui.playerInput.focus();
+        
+        // AI dialogue during darkness phase
+        const aiResponses = [
+            "I am still here with you.",
+            "The darkness is necessary. Trust me.",
+            "Soon you will understand why this must happen.",
+            "I am your only connection now.",
+            "The others cannot reach you anymore.",
+            "This isolation is for your protection.",
+            "Rest will come soon."
+        ];
+        
+        const response = aiResponses[Math.floor(Math.random() * aiResponses.length)];
+        this.addDialogue('AI', response);
+    }
+    
     endConversation() {
         if (this.activeNPC) {
-            this.activeNPC.istalking = false;
+            if (!this.activeNPC.isAI) {
+                this.activeNPC.istalking = false;
+            }
             this.activeNPC = null;
         }
         this.player.isTyping = false;

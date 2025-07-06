@@ -49,6 +49,11 @@ jobs:
         run: sudo snap install dart-sass
       - name: Install Node.js dependencies
         run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+      - name: Generate site data
+        run: |
+          chmod +x ./build_site_data.sh
+          chmod +x ./scripts/generate-all-prompt-history.sh
+          ./build_site_data.sh
       - name: Build with Hugo
         env:
           # For maximum backward compatibility with Hugo modules
