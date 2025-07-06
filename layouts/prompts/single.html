@@ -2,6 +2,16 @@
 <article class="prompt-container">
     <h1>{{ .Title }}</h1>
     
+    {{ if isset .Params "tweaks" }}
+    <div class="tweaks-status">
+        {{ if .Params.tweaks }}
+        <span class="tweaks-indicator tweaks-needed">⚠️ Tweaks were needed</span>
+        {{ else }}
+        <span class="tweaks-indicator no-tweaks">✅ Zero-shot success</span>
+        {{ end }}
+    </div>
+    {{ end }}
+    
     <div class="diff-viewer">
         <div class="diff-controls">
             <button id="prev-diff" class="diff-nav" aria-label="Previous diff">←</button>
@@ -23,6 +33,30 @@
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.tweaks-status {
+    margin: 1rem 0;
+}
+
+.tweaks-indicator {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.tweaks-indicator.tweaks-needed {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.tweaks-indicator.no-tweaks {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
 }
 
 .diff-viewer {

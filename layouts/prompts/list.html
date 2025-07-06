@@ -18,7 +18,16 @@
                 <a href="{{ .RelPermalink }}" style="color: #007acc; text-decoration: none;">{{ .Title }}</a>
             </h3>
             {{ if .Params.status }}
-            <p style="color: #666; margin-bottom: 0.5rem;">Status: <span style="color: #28a745; font-weight: bold;">{{ .Params.status }} ✓</span></p>
+            <p style="color: #666; margin-bottom: 0.5rem;">
+                Status: <span style="color: #28a745; font-weight: bold;">{{ .Params.status }} ✓</span>
+                {{ if isset .Params "tweaks" }}
+                    {{ if .Params.tweaks }}
+                    <span style="background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.85rem; margin-left: 0.5rem;">⚠️ Tweaks needed</span>
+                    {{ else }}
+                    <span style="background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.85rem; margin-left: 0.5rem;">✅ Zero-shot</span>
+                    {{ end }}
+                {{ end }}
+            </p>
             {{ end }}
             {{ if .Date }}
             <p style="color: #666; margin-bottom: 0.5rem;">Date: {{ .Date.Format "January 2, 2006" }}</p>
