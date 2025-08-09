@@ -176,8 +176,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentIndex = 0;
     let isShowingCurrent = true;
     
-    // Get prompt number from page data
-    const promptNum = {{ .File.ContentBaseName }};
+    // Get prompt identifier from page data
+    const promptNum = "{{ .File.ContentBaseName }}";
     
     // Initialize with git history if available
     initializeHistory();
@@ -186,11 +186,18 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get git history from Hugo data
         {{ if .Site.Data.prompt_history }}
         {{ $promptNum := .File.ContentBaseName }}
-        {{ $promptNumInt := int $promptNum }}
-        {{ $promptNumStr := printf "%d" $promptNumInt }}
-        {{ $promptHistory := index .Site.Data.prompt_history.prompts $promptNumStr }}
+        {{ $promptHistory := index .Site.Data.prompt_history.prompts $promptNum }}
         {{ if $promptHistory }}
         commits = JSON.parse({{ $promptHistory | jsonify }});
+        {{ else }}
+        // Try with numeric part only if the full filename doesn't work
+        {{ $numericPart := replaceRE "^(\\d+).*" "$1" $promptNum }}
+        {{ if ne $numericPart $promptNum }}
+        {{ $promptHistory := index .Site.Data.prompt_history.prompts $numericPart }}
+        {{ if $promptHistory }}
+        commits = JSON.parse({{ $promptHistory | jsonify }});
+        {{ end }}
+        {{ end }}
         {{ end }}
         {{ end }}
         
