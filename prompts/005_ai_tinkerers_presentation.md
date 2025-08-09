@@ -7,25 +7,33 @@ I'm eager to provide an overview of how I'm thinking about the future of program
 
 
 ## Implementation and Aesthetics 
-The presentation should be rendered into a project on my static website. You should be able to flip through in full screen mode and see each slide as you go. Use an appropriate JavaScript library to do so. The aesthetic should be neutral with some touches of color and a nice silhouetted background of stars which are connected slide to slide into a constellation. The constellation itself should be the image of an Ouroboros. It should be easy for me to go in and edit the bullet points and allow me to tweak the narrative after it's been generated. Each slide should be spare with several bullet points that capture the intent of each slide and it should be editable. 
+The presentation should be rendered into a new section for Talks on my static website. You should be able to click through then flip through in full screen mode and see each slide as you go. Use an appropriate JavaScript library to do so. The aesthetic should be neutral with some touches of color and a nice silhouetted background of stars which are connected slide to slide into a constellation. The constellation itself should be the image of an Ouroboros. It should be easy for me to go in and edit the bullet points and allow me to tweak the narrative after it's been generated. Each slide should be spare with several bullet points that capture the intent of each slide and it should be editable. 
+
+
+## Diagrams
+For diagrams, generate them with UML like syntax. I believe mermaid or similar has an approach to do this. Make sure that the visual style is appealing and fits with the presentation. Please generate diagrams for slides that call for it. 
 
 
 ## Overarching narrative 
 The overarching narrative is that LLMs are a new medium of communication. They are a new medium of communication between ourselves. That is, they compress and decompress intent. And intent itself is a very vague concept. So it's amorphous and then it becomes rigid as part of this compression or decompression. And LLMs add their own spin or biases as this compression and decompression happens. This can allow us to express ourselves very, very clearly, but also disintermediates ourselves from the final product of what we're sharing. And so it's a double-edged sword. It's this unwieldy unknown alien tool that will radically change how we communicate.
 
 ## Slide 1 -- Image of Communication
+Generate diagram
 In this slide there's an image, it can be a diagram of how people communicate to each other. There's a concept that's blurry in that person A's head that then they try and create more concrete into to provide to a person and they use words as a as a medium or voice or text or image or art to communicate that intent and hopefully it crystallizes some sort of similar but not identical intent in person B's head.
 
 ## Slide 2 -- LLMs as a Medium
+Generate diagram -- it should be similar to slide 1 but show the influence of LLMs and how they can confuse the intent generated
 Now with the advent of LLMs, the amount of effort it takes to communicate to these other people has drastically reduced. Where previously we could only use words, now we can use all sorts of media like images or videos. Or images or video or much longer paragraphs. And so previously where we were limited by the effort involved in translating the intent. So each effort was very clear. Now LLMs have totally broken this relationship between the translation of intent to media as a part of communication. Which means that people now are unable to determine whether the intent came from the LLM or from the person.
 
 ## Slide 3 -- Disorienting
 This is completely disorienting because the rules and how we've evolved to communicate with each other are predicated on this idea of cost. We can easily tell spam historically because it was clear there was not much intent behind it. It wasn't personalized. It was, it felt rigid. Now with LMs and relatedly the Turing tests, we no longer can tell how much human effort or labor went into this communication. We prize human communication. What we seek is connection with each other. And previously it was easy to find that connection. Now we're awash in a sea of media. And it's unclear who's talking to us. I'm unsure where this will go and we will see maybe people will retreat to more honest or clear media. Maybe we'll invent media that is only human-generatable or maybe we'll seek real physical connection instead. That's just speculation we'll have to see.
 
 ## Slide 4 -- Communication with Computers
+Generate Diagram
 This same process is happening with computers. Historically, we communicate to computers what we want. We have intent in our head and then we translate it with extremely rigid, formal grammars of programming languages to make computers do what we want. They say programming is the stuff of thought, but you needed to translate that via a very rigid grammar that was imperfect, where a lot of the rules were what we focused on and not the intent. Therefore you had to train for several years and your skills would increase over time to try and make the computer do what you wanted.
 
 ## Slide 5 -- LLMs with Computers
+Generate Diagram -- similar to slide 2
 Now with LLMs and computers, we can easily generate code much faster and more detailed than we historically could. Similar to how we communicate with humans. Except with computers, the grammar is very clear. It's clear, it can run. And so we have this very quick feedback loop of being able to manifest intent into the computer with relatively little effort.
 
 ## Slide 6 -- Computing Quality and Safety
