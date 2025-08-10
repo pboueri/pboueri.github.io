@@ -118,4 +118,5 @@ Many software projects have hit on these patterns or anti-patterns in different 
 - [Incremental](https://github.com/janestreet/incremental)
 - [Flyaway](https://github.com/flyway/flyway)
 - [Terraform](https://developer.hashicorp.com/terraform)
+   - [As Code](https://mitchellh.com/writing/as-code)
 - [Jupyter Notebooks](https://jupyter.org/)
