@@ -213,10 +213,26 @@
 </head>
 <body>
     <canvas id="constellation-canvas"></canvas>
+
+    
     
     <div class="presentation-container">
-        <!-- Slide 1: Title -->
-        <div class="slide active" id="slide-1">
+
+
+            <div class="slide active" id="slide-1">
+                <h1>Compilers Of Intent</h1>
+                <br/>
+                <ul>
+                    
+                    <li>Patrick Boueri</li>
+                    <li><a href="https://chatgpt.aitinkerers.org/" target="_blank" rel="noopener noreferrer">AI Tinkerers Chicago</a></li>
+                    <li>August 12, 2025</li>
+                </ul>
+            </div>
+    
+
+
+        <div class="slide" id="slide-2">
             <h1>LLMs are a New Medium of Communication</h1>
             <ul>
                 <li>LLMs can compress and decompress intent</li>
@@ -226,8 +242,8 @@
             </ul>
         </div>
 
-        <!-- Slide 2: Human Communication -->
-        <div class="slide" id="slide-2">
+
+        <div class="slide" id="slide-3">
             <h2>How Humans Communicate</h2>
             <div class="diagram">
                 <div class="mermaid">
@@ -246,8 +262,7 @@
             </ul>
         </div>
 
-        <!-- Slide 3: LLMs as Medium -->
-        <div class="slide" id="slide-3">
+        <div class="slide" id="slide-4">
             <h2>LLMs as a Communication Medium</h2>
             <div class="diagram">
                 <div class="mermaid">
@@ -271,26 +286,23 @@
             </ul>
         </div>
 
-        <!-- Slide 4: Disorienting -->
-        <div class="slide" id="slide-4">
+        <div class="slide" id="slide-5">
             <h2>This is Completely Disorienting</h2>
             <ul>
                 <li>Human communication evolved around effort-based trust</li>
-                <li style="margin-left: 2em;">Example: spam was detectable by lack of personalization</li>
                 <li>We can no longer gauge human effort behind communication</li>
                 <li>We prize connection, but now swim in a totally different media landscape</li>
                 <li  style="margin-left: 2em;">Some potential futures: human-only media, physical connection</li>
             </ul>
         </div>
 
-        <!-- Slide 5: Computer Communication -->
-        <div class="slide" id="slide-5">
+        <div class="slide" id="slide-6">
             <h2>How We Communicate with Computers</h2>
             <div class="diagram">
                 <div class="mermaid">
                     graph LR
                         A[Human Intent] --> B[Programming Language<br/>Rigid Grammar]
-                        B --> C[Computer Program<br/>Intended Behavior]
+                        B --> C[Computer Program<br/>Translated Intent]
                         D[Years of Training] --> B
                         style A fill:#ffab40,stroke:#fff,color:#000
                         style B fill:#f44336,stroke:#fff,color:#fff
@@ -299,40 +311,12 @@
                 </div>
             </div>
             <ul>
-                <li>Programming requires extremely rigid, formal grammars</li>
-                <li>Focus on syntax rules, not intent</li>
-                <li>Years of training needed to translate thought to code</li>
-                <li>Imperfect translation between intent and execution</li>
+                <li>Programming is deterministic, with clear grammar</li>
+                <li>Training needed to translate intent to coded intent</li>
+                <li>Quality of translation based on experience</li> 
             </ul>
         </div>
 
-        <!-- Slide 6: LLMs with Computers -->
-        <div class="slide" id="slide-6">
-            <h2>LLMs Change Computer Communication</h2>
-            <div class="diagram">
-                <div class="mermaid">
-                    graph LR
-                        A[Human Intent] --> B[LLM<br/>Translation]
-                        B --> C[Computer Program<br/> Muddled Intent]
-                        C --> D[Quick Feedback Loop]
-                        D --> A
-                        E[LLM Bias<br/>& Interpretation] --> C
-                        style A fill:#ffab40,stroke:#fff,color:#000
-                        style B fill:#9c27b0,stroke:#fff,color:#fff
-                        style C fill:#81c784,stroke:#fff,color:#000
-                        style D fill:#64b5f6,stroke:#fff,color:#000
-                        style E fill:#ff5722,stroke:#fff,color:#fff
-                </div>
-            </div>
-            <ul>
-                <li>Generate detailed code much faster than before</li>
-                <li>Clear grammar: code either runs or doesn't</li>
-                <li>Quick feedback loop for intent manifestation</li>
-                <li>Dramatically reduced barrier between intent and execution</li>
-            </ul>
-        </div>
-
-        <!-- Slide 7: Quality and Safety -->
         <div class="slide" id="slide-7">
             <h2>Computing Quality & Safety</h2>
             <ul>
@@ -342,32 +326,75 @@
                 <li>Human speed and attention provided natural safety bounds</li>
             </ul>
         </div>
-
-        <!-- Slide 8: LLMs Remove Safety -->
+        
         <div class="slide" id="slide-8">
+            <h2>LLMs Change Computer Communication</h2>
+            <div class="diagram">
+                <div class="mermaid">
+                    graph LR
+                        A[Human Intent] --> B[LLM<br/>Translation]
+                        B --> C[Computer Program<br/> Muddled Intent]
+                        D[LLM Bias<br/>& Interpretation] --> C
+                        style A fill:#ffab40,stroke:#fff,color:#000
+                        style B fill:#9c27b0,stroke:#fff,color:#fff
+                        style C fill:#81c784,stroke:#fff,color:#000
+                        style D fill:#64b5f6,stroke:#fff,color:#000
+                </div>
+            </div>
+            <ul>
+                <li>Dramatically reduced barrier between intent and execution</li>
+                <li>LLMs muddle intent and speed no longer a bottleneck</li>
+            </ul>
+        </div>
+
+
+        <div class="slide" id="slide-9">
             <h2>LLMs Remove This Safety</h2>
             <ul>
                 <li>Small intent can unfurl into massive programs</li>
                 <li>LLMs fill in gaps in our intent</li>
                 <li style="margin-left: 2em;">Like super-resolving images: looks right, but patches may be off</li>
                 <li>Impact not intent -- and these things have impact</li>
+                <li>BUT! Programs have a unique advantage</li>
             </ul>
         </div>
 
-        <!-- Slide 9: Siren's Call -->
-        <div class="slide" id="slide-9">
+        <div class="slide" id="slide-10">
+            <h2>Programs are Quickly Verifiable</h2>
+            <div class="diagram">
+                <div class="mermaid">
+                    graph LR
+                        A[Human Intent] --> B[LLM<br/>Translation]
+                        B --> C[Computer Program<br/> Muddled Intent]
+                        D[LLM Bias<br/>& Interpretation] --> C
+                        C --> E[Verification<br/>& Feedback Loop]
+                        E --> A
+                        style A fill:#ffab40,stroke:#fff,color:#000
+                        style B fill:#9c27b0,stroke:#fff,color:#fff
+                        style C fill:#81c784,stroke:#fff,color:#000
+                        style D fill:#64b5f6,stroke:#fff,color:#000
+                </div>
+            </div>
+            <ul>
+                <li>Verifications allow us to refine our intent</li>
+                <li>If we get the cycle time down, we can iterate quickly</li>
+                <li>The hardest part is expressing and recording our refinement</li>
+            </ul>
+        </div>
+
+
+        <div class="slide" id="slide-11">
             <h2>The Siren's Call</h2>
             <ul>
                 <li>Speed of intent-to-reality is incredibly alluring. This is the stuff of science fiction</li>
                 <li>How do we maintain quality and safety?</li>
-                <li style="margin-left: 2em;">Need a discipline of intent</li>
                 <li style="margin-left: 2em;">Programming language that captures true intent</li>
                 <li style="margin-left: 2em;">Preserve safety, reproducibility, and clarity</li>
+                <li style="margin-left: 2em;">Refinement as the core workflow</li>
             </ul>
         </div>
 
-        <!-- Slide 10: Intentc -->
-        <div class="slide" id="slide-10">
+        <div class="slide" id="slide-12">
             <h2>
                 <a href="https://github.com/pboueri/intentc" target="_blank" rel="noopener noreferrer">
                     Intentc: An Experimental Approach
@@ -381,18 +408,24 @@
             </ul>
         </div>
 
-        <!-- Slide 11: Live Demo -->
-        <div class="slide" id="slide-11">
-            <h1>Live Demo</h1>
+
+        <div class="slide" id="slide-13">
+            <h2>
+                <a href="https://pboueri.github.io/blog/compilers-of-intent/" target="_blank" rel="noopener noreferrer">
+                    Future Directions
+                </a>
+            </h2>
             <ul>
-                <li>Time for questions and discussion</li>
-                <li>Thank you for your attention!</li>
+                <li>Create a first class grammar for intent</li>
+                <li>Intuitive Refinement Loop</li>
+                <li>Collaborative intent from multiple people / disciplines</li>
+                <li>Remote execution and tracking built targets</li>
             </ul>
         </div>
     </div>
 
     <div class="slide-counter">
-        <span id="current-slide">1</span> / <span id="total-slides">11</span>
+        <span id="current-slide">1</span> / <span id="total-slides">12</span>
     </div>
 
     <button class="fullscreen-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">
