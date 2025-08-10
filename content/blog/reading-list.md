@@ -19,20 +19,18 @@ Recent interests
 - [Beaurocratic Theory of Statistics](https://arxiv.org/abs/2501.03457)
 - [As Code](https://mitchellh.com/writing/as-code)
 - [Disposable Code](https://www.honeycomb.io/blog/disposable-code-is-here-to-stay)
-
-Stuff I listened to:
 - [Empire of AI](https://en.wikipedia.org/wiki/Empire_of_AI)
-- [Character Limit](https://en.wikipedia.org/wiki/Character_Limit:_How_Elon_Musk_Destroyed_Twitter)
-- [Who Is Government?](https://www.penguinrandomhouse.com/books/788713/who-is-government-by-edited-by-michael-lewis/)
 
 
-Podcasts I like:
-- [Ezra Klein]
-- [Dwarkesh]
-- [Statecraft]
-- [Capital Allocators]
-- [Business Breakdowns]
-- [Know Your Enemy]
-- [Amicus]
-- [Software Engineering Radio]
-- [Strict Scrutiny]
+
+
+
+
+
+
+
+
+
+
+
+
