@@ -41,8 +41,9 @@
 
         .slide {
             display: none;
-            max-width: 900px;
-            padding: 60px;
+            max-width: 1200px;
+            width: 90%;
+            padding: 80px;
             text-align: center;
             background: rgba(0, 0, 0, 0.3);
             border-radius: 20px;
@@ -62,31 +63,31 @@
         }
 
         .slide h1 {
-            font-size: 3em;
-            margin-bottom: 30px;
+            font-size: 4em;
+            margin-bottom: 40px;
             color: #ffffff;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
         }
 
         .slide h2 {
-            font-size: 2.5em;
-            margin-bottom: 30px;
+            font-size: 3.5em;
+            margin-bottom: 40px;
             color: #e0e0e0;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
         }
 
         .slide ul {
             list-style: none;
-            font-size: 1.3em;
+            font-size: 1.6em;
             line-height: 1.8;
             text-align: left;
-            max-width: 700px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
         .slide li {
-            margin-bottom: 15px;
-            padding-left: 30px;
+            margin-bottom: 20px;
+            padding-left: 40px;
             position: relative;
         }
 
@@ -114,8 +115,8 @@
         }
 
         .diagram {
-            margin: 30px 0;
-            padding: 20px;
+            margin: 40px 0;
+            padding: 30px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -193,20 +194,21 @@
 
         @media (max-width: 768px) {
             .slide {
-                padding: 30px;
+                padding: 40px;
                 margin: 20px;
+                width: 95%;
             }
             
             .slide h1 {
-                font-size: 2em;
+                font-size: 2.5em;
             }
             
             .slide h2 {
-                font-size: 1.8em;
+                font-size: 2.2em;
             }
             
             .slide ul {
-                font-size: 1.1em;
+                font-size: 1.3em;
             }
         }
     </style>
@@ -219,7 +221,7 @@
     <div class="presentation-container">
 
 
-            <div class="slide active" id="slide-1">
+            <div class="slide active">
                 <h1>Compilers Of Intent</h1>
                 <br/>
                 <ul>
@@ -231,19 +233,26 @@
             </div>
     
 
-
-        <div class="slide" id="slide-2">
-            <h1>LLMs are a New Medium of Communication</h1>
+        <div class="slide">
+            <h1>Communication is Hard</h1>
             <ul>
-                <li>LLMs can compress and decompress intent</li>
-                <li>LLMs generate other media</li>
-                <li>LLMs muddle intent more than any other medium</li>
-                <li>More in depth treatment: <a href="https://henryfarrell.net/large-ai-models-are-cultural-and-social-technologies/">Large AI models are cultural and social technologies</a></li>
+                <li>Imagine a picture of an orange square, red circle, and yellow triangle</li>
+                <li>Imagine the yellow triangle is above the orange square</li>
+                <li>Now ask someone to draw what you're thinking</li>
+              
+            </ul>
+        </div>
+
+        <div class="slide">
+            <h1>Communication is Hard</h1>
+            <ul>
+                <li>You may get something like this: <img src="/assets/talks/shapes.png" alt="Example of a picture of an orange square, red circle, and yellow triangle" style="display: block; margin: 30px auto; max-width: 450px;"></li>
+                <li>Did that match what you were thinking?</li>
             </ul>
         </div>
 
 
-        <div class="slide" id="slide-3">
+        <div class="slide">
             <h2>How Humans Communicate</h2>
             <div class="diagram">
                 <div class="mermaid">
@@ -262,7 +271,18 @@
             </ul>
         </div>
 
-        <div class="slide" id="slide-4">
+        <div class="slide">
+            <h1>LLMs are a New Medium of Communication</h1>
+            <ul>
+                <li>LLMs can compress and decompress intent</li>
+                <li>LLMs generate other media</li>
+                <li>LLMs muddle intent more than any other medium</li>
+                <li>More in depth treatment: <a href="https://henryfarrell.net/large-ai-models-are-cultural-and-social-technologies/">Large AI models are cultural and social technologies</a></li>
+            </ul>
+        </div>
+
+
+        <div class="slide">
             <h2>LLMs as a Communication Medium</h2>
             <div class="diagram">
                 <div class="mermaid">
@@ -286,7 +306,7 @@
             </ul>
         </div>
 
-        <div class="slide" id="slide-5">
+        <div class="slide">
             <h2>This is Completely Disorienting</h2>
             <ul>
                 <li>Human communication evolved around effort-based trust</li>
@@ -296,7 +316,7 @@
             </ul>
         </div>
 
-        <div class="slide" id="slide-6">
+        <div class="slide">
             <h2>How We Communicate with Computers</h2>
             <div class="diagram">
                 <div class="mermaid">
@@ -317,7 +337,7 @@
             </ul>
         </div>
 
-        <div class="slide" id="slide-7">
+        <div class="slide">
             <h2>Computing Quality & Safety</h2>
             <ul>
                 <li>Traditional safety came from inherent human limits</li>
@@ -327,7 +347,7 @@
             </ul>
         </div>
         
-        <div class="slide" id="slide-8">
+        <div class="slide">
             <h2>LLMs Change Computer Communication</h2>
             <div class="diagram">
                 <div class="mermaid">
@@ -348,7 +368,7 @@
         </div>
 
 
-        <div class="slide" id="slide-9">
+        <div class="slide">
             <h2>LLMs Remove This Safety</h2>
             <ul>
                 <li>Small intent can unfurl into massive programs</li>
@@ -359,7 +379,16 @@
             </ul>
         </div>
 
-        <div class="slide" id="slide-10">
+        <div class="slide">
+            <h2>Shape Task Redux</h2>
+            <ul>
+                <li>I asked the claude to draw the shapes 5 times with written intent</li>
+                <img src="/assets/talks/llm_shapes.gif" alt="Gif of the llms drawing the shapes 5 times" style="display: block; margin: 30px auto;">
+                <li>Variation high = intent not well translated</li>
+            </ul>
+        </div>
+
+        <div class="slide">+
             <h2>Programs are Quickly Verifiable</h2>
             <div class="diagram">
                 <div class="mermaid">
@@ -383,7 +412,7 @@
         </div>
 
 
-        <div class="slide" id="slide-11">
+        <div class="slide">
             <h2>The Siren's Call</h2>
             <ul>
                 <li>Speed of intent-to-reality is incredibly alluring. This is the stuff of science fiction</li>
@@ -394,7 +423,7 @@
             </ul>
         </div>
 
-        <div class="slide" id="slide-12">
+        <div class="slide">
             <h2>
                 <a href="https://github.com/pboueri/intentc" target="_blank" rel="noopener noreferrer">
                     Intentc: An Experimental Approach
@@ -409,7 +438,7 @@
         </div>
 
 
-        <div class="slide" id="slide-13">
+        <div class="slide">
             <h2>
                 <a href="https://pboueri.github.io/blog/compilers-of-intent/" target="_blank" rel="noopener noreferrer">
                     Future Directions
@@ -425,7 +454,7 @@
     </div>
 
     <div class="slide-counter">
-        <span id="current-slide">1</span> / <span id="total-slides">12</span>
+        <span id="current-slide">1</span> / <span id="total-slides"></span>
     </div>
 
     <button class="fullscreen-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">
@@ -458,7 +487,10 @@
 
         // Function to render mermaid diagrams in active slide
         function renderMermaidInSlide(slideNumber) {
-            const slide = document.getElementById(`slide-${slideNumber}`);
+            const slides = document.querySelectorAll('.slide');
+            const slide = slides[slideNumber - 1]; // Convert to 0-based index
+            if (!slide) return;
+            
             const mermaidElements = slide.querySelectorAll('.mermaid:not([data-processed])');
             
             if (mermaidElements.length > 0) {
@@ -579,12 +611,19 @@
         document.getElementById('total-slides').textContent = totalSlides;
 
         function showSlide(slideNumber) {
-            document.querySelectorAll('.slide').forEach(slide => {
+            const slides = document.querySelectorAll('.slide');
+            
+            // Remove active class from all slides
+            slides.forEach(slide => {
                 slide.classList.remove('active');
             });
             
-            const currentSlideElement = document.getElementById(`slide-${slideNumber}`);
-            currentSlideElement.classList.add('active');
+            // Add active class to the current slide (using 0-based index)
+            const currentSlideElement = slides[slideNumber - 1];
+            if (currentSlideElement) {
+                currentSlideElement.classList.add('active');
+            }
+            
             document.getElementById('current-slide').textContent = slideNumber;
             
             document.getElementById('prev-btn').disabled = slideNumber === 1;
