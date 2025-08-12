@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>{{ .Title }}</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
     <style>
@@ -17,6 +17,8 @@
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #0a0a0a 100%);
             color: #ffffff;
             overflow: hidden;
+            min-height: 100vh;
+            position: relative;
         }
 
         #constellation-canvas {
@@ -32,11 +34,15 @@
         .presentation-container {
             position: relative;
             width: 100%;
+            min-height: 100vh;
             height: 100vh;
             z-index: 10;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
         }
 
         .slide {
@@ -50,6 +56,29 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+        }
+        
+        .slide::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .slide::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .slide::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+        
+        .slide::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
         }
 
         .slide.active {
@@ -193,22 +222,80 @@
         }
 
         @media (max-width: 768px) {
+            .presentation-container {
+                padding: 10px;
+            }
+            
             .slide {
-                padding: 40px;
-                margin: 20px;
-                width: 95%;
+                padding: 20px;
+                margin: 10px;
+                width: calc(100% - 20px);
+                max-width: 100%;
+                max-height: calc(100vh - 100px);
+                border-radius: 15px;
             }
             
             .slide h1 {
-                font-size: 2.5em;
+                font-size: 1.8em;
+                margin-bottom: 20px;
             }
             
             .slide h2 {
-                font-size: 2.2em;
+                font-size: 1.5em;
+                margin-bottom: 20px;
             }
             
             .slide ul {
-                font-size: 1.3em;
+                font-size: 1em;
+                max-width: 100%;
+                padding: 0 10px;
+            }
+            
+            .slide li {
+                margin-bottom: 12px;
+                padding-left: 25px;
+            }
+            
+            .slide img {
+                max-width: 100% !important;
+                height: auto;
+            }
+            
+            .diagram {
+                padding: 15px;
+                margin: 20px 0;
+                overflow-x: auto;
+                overflow-y: hidden;
+            }
+            
+            .mermaid {
+                max-width: 100%;
+                overflow-x: auto;
+            }
+            
+            .navigation {
+                bottom: 15px;
+                right: 15px;
+                gap: 10px;
+            }
+            
+            .nav-btn {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .slide-counter {
+                top: 15px;
+                right: 15px;
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .fullscreen-btn {
+                top: 15px;
+                left: 15px;
+                padding: 10px;
+                font-size: 16px;
             }
         }
     </style>
@@ -680,6 +767,42 @@
             }
         });
 
+        // Touch gesture support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let touchStartY = 0;
+        let touchEndY = 0;
+        
+        const presentationContainer = document.querySelector('.presentation-container');
+        
+        presentationContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+        
+        presentationContainer.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe();
+        }, { passive: true });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const horizontalSwipe = Math.abs(touchEndX - touchStartX);
+            const verticalSwipe = Math.abs(touchEndY - touchStartY);
+            
+            // Only trigger if horizontal swipe is greater than vertical (to avoid conflict with scrolling)
+            if (horizontalSwipe > verticalSwipe && horizontalSwipe > swipeThreshold) {
+                if (touchEndX < touchStartX) {
+                    // Swiped left - go to next slide
+                    nextSlide();
+                } else if (touchEndX > touchStartX) {
+                    // Swiped right - go to previous slide
+                    previousSlide();
+                }
+            }
+        }
+        
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             showSlide(1);
