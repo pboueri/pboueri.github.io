@@ -1,0 +1,88 @@
+{
+  "description": "Solutions for The Chicago Loop game levels. Each solution contains the initial 5x5 grid setup (true=alive, false=dead) and the rules for cell birth/survival.",
+  "usage": "Load this file and use ChicagoLoopGame.simulate(levelIndex, setupGrid, rules) to verify solutions",
+  "levels": [
+    {
+      "level": 1,
+      "name": "The Tunnels",
+      "description": "Navigate from bottom-right (17,13) to top-left (2,1)",
+      "strategy": "Place cells to the right and below the starting position to push player up-left. Use rules that create a persistent wave pattern.",
+      "solution": {
+        "setupGrid": [
+          [false, false, false, false, true],
+          [false, false, false, true, true],
+          [false, false, true, true, false],
+          [false, true, true, false, false],
+          [true, true, false, false, false]
+        ],
+        "rules": {
+          "birth": [3],
+          "survive": [2, 3]
+        }
+      },
+      "expectedGenerations": "~50-80",
+      "notes": "The diagonal pattern creates a wave that persistently pushes the player toward the goal. Standard Conway rules work well here."
+    },
+    {
+      "level": 2,
+      "name": "The River",
+      "description": "Navigate from left (1,7) to right (18,5)",
+      "strategy": "Place cells to the left of starting position to push player right. Need a pattern that moves rightward or persists.",
+      "solution": {
+        "setupGrid": [
+          [true, true, false, false, false],
+          [true, true, false, false, false],
+          [false, false, false, false, false],
+          [true, true, false, false, false],
+          [true, true, false, false, false]
+        ],
+        "rules": {
+          "birth": [3],
+          "survive": [2, 3]
+        }
+      },
+      "expectedGenerations": "~40-70",
+      "notes": "Block patterns (2x2) are stable in Conway's rules. Multiple blocks create consistent rightward pressure."
+    },
+    {
+      "level": 3,
+      "name": "The Streets",
+      "description": "Navigate from top-right (17,1) to bottom-left (2,13)",
+      "strategy": "Place cells to the right and above to push player left and down.",
+      "solution": {
+        "setupGrid": [
+          [true, true, true, false, false],
+          [true, false, true, false, false],
+          [true, true, true, false, false],
+          [false, false, false, false, false],
+          [false, false, false, false, false]
+        ],
+        "rules": {
+          "birth": [3],
+          "survive": [2, 3]
+        }
+      },
+      "expectedGenerations": "~60-90",
+      "notes": "A filled square pattern creates oscillating behavior that pushes the player diagonally."
+    }
+  ],
+  "alternativeSolutions": {
+    "description": "Alternative rule sets that can work with different setups",
+    "highLife": {
+      "birth": [3, 6],
+      "survive": [2, 3],
+      "notes": "HighLife variant - cells also born with 6 neighbors. Creates more dynamic patterns."
+    },
+    "dayAndNight": {
+      "birth": [3, 6, 7, 8],
+      "survive": [3, 4, 6, 7, 8],
+      "notes": "Day & Night rules - symmetric pattern. Dead and alive cells behave similarly."
+    },
+    "seeds": {
+      "birth": [2],
+      "survive": [],
+      "notes": "Seeds - explosive growth, cells die immediately but reproduce first. Very chaotic."
+    }
+  },
+  "simulationCode": "// Run in Node.js:\n// const Game = require('./game.js');\n// const solutions = require('./solutions.json');\n// const result = Game.simulate(0, solutions.levels[0].solution.setupGrid, solutions.levels[0].solution.rules);\n// console.log(result);"
+}
