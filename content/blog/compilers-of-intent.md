@@ -27,7 +27,9 @@ Any formal system defines its terms:
 - **Dependency**: A reliance of one intent on another in order to build up a complete vision
 
 
-Succinctly a person has a Vision, which they seek via incremental Dependent Intents via Prompts. These Prompts are interpreted by an agent to create an Output. The Outputs are Validated and if found to be deficient, are Refined until they achieve the overall goal of the Intent. 
+Succinctly a person has a Vision, which they seek via incremental Dependent Intents expressed as Prompts. 
+
+A Prompt is interpreted by an agent to create an Output. The Output is Validated and if found to be deficient, Refined until it achieves the overall goal of the Intent. 
 
 
 
@@ -87,7 +89,7 @@ I strongly believe this is the way we will be building software in the near futu
 
 A really well developed product would allow a user to bridge the gap from local to cloud, offloading long running tasks and caching them for others, similar to [Bazel](https://bazel.build/remote/caching), with a team first mindset of allowing many people to contribute new intents towards a vision. 
 
-It would have a clear way of developing new intents and writing them out, removing boiler plate and distilling down essence. With the project context and vision, it would enable the author to go quickly and allow for serendipity as intent crystallizes to prompts with helpful suggestions.
+It would have a clear way of developing new intents and writing them out, removing boiler plate and distilling down essence. With the project context and vision, it would enable the author to go quickly and allow for serendipity as intent crystallizes to prompts with helpful suggestions.This may potentially have a formal grammar distinguishing varying levels of specification (think a schema as super specific and "make a ui" as very broad)
 
 It would have a first class editor that helps specify validations as precisely or loosely as required, and fix them as needed. 
 
@@ -107,7 +109,7 @@ It would feel smart.
 
 ## Future
 
-As agents get more competent and the miss rate goes down and their speed goes up and our media of how we can communicate with them changes, the loop of intent will get tighter and tighter and tighter. There is a natural speed limit to how fast we can express what we want and how fast we can evaluate things. What that speed lemon is we don't know. Does the world even need all this stuff, we don't know. But it seems like progress is inexorably getting closer to this end point. 
+As agents get more competent and the miss rate goes down and their speed goes up and our media of how we can communicate with them changes, the loop of intent will get tighter and tighter and tighter. There is a natural speed limit to how fast we can express what we want and how fast we can evaluate things. What that speed limit is we don't know. Does the world even need all this stuff, we don't know. But it seems like progress is inexorably getting closer to this end point. 
 
 ## Inspiration
 
