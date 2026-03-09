@@ -32,6 +32,11 @@ title = "Patrick Boueri"
   weight = 30
 
 [[menu.main]]
+  name = "Tools"
+  url = "/tools/"
+  weight = 35
+
+[[menu.main]]
   name = "Prompts"
   url = "/prompts/"
-  weight = 40 
+  weight = 40
