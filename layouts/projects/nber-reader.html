@@ -1,24 +1,25 @@
 {{ define "main" }}
 <div id="nber-reader">
-    <div class="reader-header">
-        <h1>NBER Paper Reader</h1>
-        <p class="reader-subtitle">Inlines figures and tables where they're referenced, so you can actually read papers on mobile.</p>
-    </div>
-
     <div id="upload-section">
-        <div class="input-group">
-            <label for="pdf-upload" class="upload-label">
-                <span class="upload-icon">PDF</span>
-                <span>Drop a PDF here or click to upload</span>
-                <input type="file" id="pdf-upload" accept=".pdf" />
-            </label>
+        <div class="reader-header">
+            <h1>NBER Paper Reader</h1>
+            <p class="reader-subtitle">Split-view reader: read the paper on one side, browse figures on the other.</p>
         </div>
-        <div class="or-divider"><span>or</span></div>
-        <div class="input-group url-group">
-            <input type="text" id="pdf-url" placeholder="Paste NBER paper URL (e.g. https://www.nber.org/papers/w34836)" />
-            <button id="load-url-btn">Load</button>
+        <div class="upload-inner">
+            <div class="input-group">
+                <label for="pdf-upload" class="upload-label">
+                    <span class="upload-icon">PDF</span>
+                    <span>Drop a PDF here or click to upload</span>
+                    <input type="file" id="pdf-upload" accept=".pdf" />
+                </label>
+            </div>
+            <div class="or-divider"><span>or</span></div>
+            <div class="input-group url-group">
+                <input type="text" id="pdf-url" placeholder="Paste NBER paper URL (e.g. https://www.nber.org/papers/w34836)" />
+                <button id="load-url-btn">Load</button>
+            </div>
+            <p class="note">Note: Recent NBER papers require institutional access. If the URL doesn't work, download the PDF and upload it directly.</p>
         </div>
-        <p class="note">Note: Recent NBER papers require institutional access. If the URL doesn't work, download the PDF and upload it directly.</p>
     </div>
 
     <div id="loading-section" style="display:none;">
@@ -26,26 +27,74 @@
         <p id="loading-status">Loading PDF...</p>
     </div>
 
-    <div id="reader-controls" style="display:none;">
-        <div class="controls-bar">
+    <div id="split-view" style="display:none;">
+        <div class="split-controls">
             <span id="paper-title" class="paper-title"></span>
-            <div class="controls-right">
-                <label class="toggle-label">
-                    <input type="checkbox" id="toggle-figures" checked />
-                    <span>Inline figures</span>
-                </label>
-                <button id="reset-btn" class="reset-btn">New paper</button>
+            <button id="reset-btn" class="reset-btn">New paper</button>
+        </div>
+        <div class="split-container">
+            <div class="pane" id="pane-read">
+                <div class="pane-header">
+                    <span class="pane-label">Read</span>
+                    <div class="pane-zoom">
+                        <button class="zoom-btn" data-pane="read" data-dir="-1">-</button>
+                        <span class="zoom-level" id="zoom-read">100%</span>
+                        <button class="zoom-btn" data-pane="read" data-dir="1">+</button>
+                    </div>
+                    <div class="pane-nav">
+                        <span class="page-indicator" id="page-read">1</span>
+                        <span class="page-sep">/</span>
+                        <span class="page-total" id="total-read"></span>
+                    </div>
+                </div>
+                <div class="pane-scroll" id="scroll-read">
+                    <div class="pane-pages" id="pages-read"></div>
+                </div>
+            </div>
+            <div class="pane-divider" id="pane-divider"></div>
+            <div class="pane" id="pane-figures">
+                <div class="pane-header">
+                    <span class="pane-label">Figures</span>
+                    <div class="pane-zoom">
+                        <button class="zoom-btn" data-pane="figures" data-dir="-1">-</button>
+                        <span class="zoom-level" id="zoom-figures">100%</span>
+                        <button class="zoom-btn" data-pane="figures" data-dir="1">+</button>
+                    </div>
+                    <div class="pane-nav">
+                        <span class="page-indicator" id="page-figures">1</span>
+                        <span class="page-sep">/</span>
+                        <span class="page-total" id="total-figures"></span>
+                    </div>
+                </div>
+                <div class="pane-scroll" id="scroll-figures">
+                    <div class="pane-pages" id="pages-figures"></div>
+                </div>
             </div>
         </div>
     </div>
-
-    <div id="reader-content" style="display:none;"></div>
 </div>
 
 <style>
+    /* Reset for full-screen reader */
     #nber-reader {
-        max-width: 900px;
-        margin: 0 auto;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        background: #f5f5f5;
+        z-index: 9999;
+    }
+
+    /* Upload section — centered */
+    #upload-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         padding: 1rem;
     }
 
@@ -64,15 +113,12 @@
         font-size: 0.95rem;
     }
 
-    /* Upload section */
-    #upload-section {
-        max-width: 600px;
-        margin: 0 auto;
+    .upload-inner {
+        max-width: 500px;
+        width: 100%;
     }
 
-    .input-group {
-        margin-bottom: 1rem;
-    }
+    .input-group { margin-bottom: 1rem; }
 
     .upload-label {
         display: flex;
@@ -101,9 +147,7 @@
         border-radius: 4px;
     }
 
-    .upload-label input[type="file"] {
-        display: none;
-    }
+    .upload-label input[type="file"] { display: none; }
 
     .or-divider {
         text-align: center;
@@ -124,10 +168,7 @@
     .or-divider::before { left: 0; }
     .or-divider::after { right: 0; }
 
-    .url-group {
-        display: flex;
-        gap: 0.5rem;
-    }
+    .url-group { display: flex; gap: 0.5rem; }
 
     #pdf-url {
         flex: 1;
@@ -148,9 +189,7 @@
         white-space: nowrap;
     }
 
-    #load-url-btn:hover {
-        background: #005fa3;
-    }
+    #load-url-btn:hover { background: #005fa3; }
 
     .note {
         font-size: 0.8rem;
@@ -160,8 +199,11 @@
 
     /* Loading */
     #loading-section {
-        text-align: center;
-        padding: 3rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
     .spinner {
@@ -170,160 +212,184 @@
         border: 3px solid #eee;
         border-top-color: #007acc;
         border-radius: 50%;
-        margin: 0 auto 1rem;
+        margin-bottom: 1rem;
         animation: spin 0.8s linear infinite;
     }
 
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Controls */
-    .controls-bar {
+    /* Split view controls */
+    .split-controls {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0.75rem 1rem;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        margin-bottom: 1.5rem;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        flex-wrap: wrap;
-        gap: 0.5rem;
+        padding: 0.4rem 0.75rem;
+        background: #1a1a2e;
+        color: white;
+        flex-shrink: 0;
     }
 
     .paper-title {
         font-weight: 600;
-        font-size: 0.9rem;
-        flex: 1;
-        min-width: 0;
+        font-size: 0.85rem;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-    }
-
-    .controls-right {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        flex-shrink: 0;
-    }
-
-    .toggle-label {
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        font-size: 0.85rem;
-        cursor: pointer;
-        white-space: nowrap;
+        flex: 1;
+        margin-right: 0.5rem;
     }
 
     .reset-btn {
-        padding: 0.4rem 0.8rem;
-        background: #eee;
+        padding: 0.3rem 0.7rem;
+        background: rgba(255,255,255,0.15);
+        color: white;
         border: none;
         border-radius: 4px;
         cursor: pointer;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
+        flex-shrink: 0;
     }
 
-    .reset-btn:hover {
-        background: #ddd;
-    }
+    .reset-btn:hover { background: rgba(255,255,255,0.25); }
 
-    /* Reader content */
-    #reader-content {
+    /* Split container */
+    #split-view {
+        flex: 1;
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .page-container {
-        background: white;
-        border-radius: 4px;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
         overflow: hidden;
     }
 
-    .page-container canvas {
-        width: 100%;
-        height: auto;
-        display: block;
-    }
-
-    .figure-inline {
-        border: 2px solid #007acc;
-        border-radius: 8px;
-        overflow: hidden;
-        background: #f0f7ff;
-        scroll-margin-top: 60px;
-    }
-
-    .figure-inline-header {
-        background: #007acc;
-        color: white;
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
-        font-weight: 600;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .figure-inline-header .fig-label {
+    .split-container {
         flex: 1;
+        display: flex;
+        overflow: hidden;
     }
 
-    .figure-inline-header .fig-page-link {
-        color: rgba(255,255,255,0.8);
-        font-weight: normal;
+    /* Landscape: side by side */
+    .split-container {
+        flex-direction: row;
+    }
+
+    .pane {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        min-width: 0;
+        min-height: 0;
+    }
+
+    .pane-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.3rem 0.6rem;
+        background: #16213e;
+        color: white;
+        flex-shrink: 0;
+        font-size: 0.8rem;
+    }
+
+    .pane-label {
+        font-weight: 600;
+        margin-right: auto;
+    }
+
+    .pane-zoom {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .zoom-btn {
+        width: 26px;
+        height: 26px;
+        border: none;
+        background: rgba(255,255,255,0.15);
+        color: white;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .zoom-btn:hover { background: rgba(255,255,255,0.3); }
+
+    .zoom-level {
         font-size: 0.75rem;
+        min-width: 36px;
+        text-align: center;
     }
 
-    .figure-inline canvas {
+    .pane-nav {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        font-size: 0.75rem;
+        color: rgba(255,255,255,0.7);
+    }
+
+    .page-indicator { color: white; }
+
+    .pane-scroll {
+        flex: 1;
+        overflow: auto;
+        background: #e8e8e8;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .pane-pages {
+        transform-origin: top left;
+    }
+
+    .pane-pages .page-wrapper {
+        position: relative;
+    }
+
+    .pane-pages canvas {
+        display: block;
         width: 100%;
         height: auto;
-        display: block;
+        background: white;
     }
 
-    .figure-page-hidden {
-        display: none;
-    }
-
-    /* Page number label */
-    .page-number {
+    .pane-pages .page-number {
         text-align: center;
+        font-size: 0.7rem;
         color: #999;
-        font-size: 0.75rem;
-        padding: 0.25rem;
+        padding: 2px 0;
+        background: #e8e8e8;
     }
 
-    /* Mobile */
+    /* Divider */
+    .pane-divider {
+        width: 4px;
+        background: #1a1a2e;
+        flex-shrink: 0;
+        cursor: col-resize;
+    }
+
+    /* Portrait: top and bottom */
+    @media (orientation: portrait) {
+        .split-container {
+            flex-direction: column;
+        }
+
+        .pane-divider {
+            width: auto;
+            height: 4px;
+            cursor: row-resize;
+        }
+    }
+
+    /* Small screens */
     @media (max-width: 600px) {
-        #nber-reader {
-            padding: 0.5rem;
-        }
-
-        .reader-header h1 {
-            font-size: 1.4rem;
-        }
-
-        .url-group {
-            flex-direction: column;
-        }
-
-        .controls-bar {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .paper-title {
-            white-space: normal;
-            font-size: 0.85rem;
-        }
+        .reader-header h1 { font-size: 1.4rem; }
+        .url-group { flex-direction: column; }
     }
 </style>
 
@@ -333,36 +399,35 @@
 
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.9.155/pdf.worker.min.mjs';
 
-    // Patterns for figures/tables — requires at least one digit in the identifier
-    const FIGURE_REF_PATTERN = /\b(Figures?|Fig\.|Tables?|Appendix\s+Figures?|Appendix\s+Tables?)\s+([A-Z]?\d+[A-Za-z]?(?:\.\d+)?)/gi;
-    const FIGURE_CAPTION_PATTERN = /\b(Figure|Fig\.|Table|Appendix\s+Figure|Appendix\s+Table)\s+([A-Z]?\d+[A-Za-z]?(?:\.\d+)?)\s*[.:–—\-]/i;
-    // Panel pattern — identifier can be letter-only (Panel A) or letter+digit (Panel A1)
-    const PANEL_REF_PATTERN = /\b(Panels?)\s+([A-Z]\d?)\b/gi;
-    const PANEL_CAPTION_PATTERN = /\b(Panel)\s+([A-Z]\d?)\s*[.:–—\-]/i;
-    const NOTES_PATTERN = /^\s*Notes?\s*[.:–—-]/i;
+    const MAX_PIXEL_RATIO = 2;
+    const effectivePixelRatio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO);
+    const ZOOM_STEPS = [50, 75, 100, 125, 150, 200, 250, 300];
 
     let pdfDoc = null;
-    let pageTexts = [];
-    let pageCanvases = [];
-    let figurePages = {};      // { "Figure 1": [pageNum, ...], ... }
-    let panelToFigure = {};    // { "Panel A": "Figure 1", ... }
-    let textPageRefs = {};     // { pageNum: ["Figure 1", "Table 2", ...] }
-    let figurePageNumbers = new Set();
-    let inlineFigures = true;
 
-    // DOM elements
+    // Per-pane state
+    const panes = {
+        read: { zoom: 100, zoomIdx: 2, observer: null, pages: null, scroll: null, rendered: new Set() },
+        figures: { zoom: 100, zoomIdx: 2, observer: null, pages: null, scroll: null, rendered: new Set() }
+    };
+
+    // DOM
     const uploadSection = document.getElementById('upload-section');
     const loadingSection = document.getElementById('loading-section');
     const loadingStatus = document.getElementById('loading-status');
-    const readerControls = document.getElementById('reader-controls');
-    const readerContent = document.getElementById('reader-content');
+    const splitView = document.getElementById('split-view');
+    const paperTitle = document.getElementById('paper-title');
+    const resetBtn = document.getElementById('reset-btn');
     const pdfUpload = document.getElementById('pdf-upload');
     const pdfUrl = document.getElementById('pdf-url');
     const loadUrlBtn = document.getElementById('load-url-btn');
-    const toggleFigures = document.getElementById('toggle-figures');
-    const resetBtn = document.getElementById('reset-btn');
-    const paperTitle = document.getElementById('paper-title');
     const uploadLabel = document.querySelector('.upload-label');
+
+    // Init pane DOM refs
+    for (const id of ['read', 'figures']) {
+        panes[id].pages = document.getElementById(`pages-${id}`);
+        panes[id].scroll = document.getElementById(`scroll-${id}`);
+    }
 
     // Event listeners
     pdfUpload.addEventListener('change', (e) => {
@@ -376,7 +441,6 @@
     loadUrlBtn.addEventListener('click', () => {
         const url = pdfUrl.value.trim();
         if (!url) return;
-        // Convert NBER landing page URL to PDF URL
         let pdfUrlStr = url;
         const nberMatch = url.match(/nber\.org\/papers\/(w\d+)\/?$/);
         if (nberMatch) {
@@ -389,22 +453,19 @@
         if (e.key === 'Enter') loadUrlBtn.click();
     });
 
-    toggleFigures.addEventListener('change', () => {
-        inlineFigures = toggleFigures.checked;
-        renderDocument();
-    });
-
     resetBtn.addEventListener('click', () => {
         pdfDoc = null;
-        pageTexts = [];
-        pageCanvases = [];
-        figurePages = {};
-        panelToFigure = {};
-        textPageRefs = {};
-        figurePageNumbers = new Set();
-        readerContent.innerHTML = '';
-        readerContent.style.display = 'none';
-        readerControls.style.display = 'none';
+        for (const id of ['read', 'figures']) {
+            panes[id].pages.innerHTML = '';
+            panes[id].rendered = new Set();
+            if (panes[id].observer) panes[id].observer.disconnect();
+            panes[id].zoom = 100;
+            panes[id].zoomIdx = 2;
+            document.getElementById(`zoom-${id}`).textContent = '100%';
+            panes[id].pages.style.transform = '';
+            panes[id].pages.style.width = '';
+        }
+        splitView.style.display = 'none';
         uploadSection.style.display = '';
         pdfUpload.value = '';
         pdfUrl.value = '';
@@ -415,9 +476,7 @@
         e.preventDefault();
         uploadLabel.classList.add('dragover');
     });
-    uploadLabel.addEventListener('dragleave', () => {
-        uploadLabel.classList.remove('dragover');
-    });
+    uploadLabel.addEventListener('dragleave', () => uploadLabel.classList.remove('dragover'));
     uploadLabel.addEventListener('drop', (e) => {
         e.preventDefault();
         uploadLabel.classList.remove('dragover');
@@ -429,6 +488,88 @@
         }
     });
 
+    // Zoom buttons
+    document.querySelectorAll('.zoom-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const paneId = btn.dataset.pane;
+            const dir = parseInt(btn.dataset.dir, 10);
+            const pane = panes[paneId];
+            const newIdx = Math.max(0, Math.min(ZOOM_STEPS.length - 1, pane.zoomIdx + dir));
+            if (newIdx === pane.zoomIdx) return;
+            pane.zoomIdx = newIdx;
+            pane.zoom = ZOOM_STEPS[newIdx];
+            applyZoom(paneId);
+        });
+    });
+
+    // Pinch-to-zoom
+    for (const id of ['read', 'figures']) {
+        let startDist = 0;
+        let startZoom = 100;
+
+        panes[id].scroll.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 2) {
+                e.preventDefault();
+                startDist = getTouchDist(e.touches);
+                startZoom = panes[id].zoom;
+            }
+        }, { passive: false });
+
+        panes[id].scroll.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 2) {
+                e.preventDefault();
+                const dist = getTouchDist(e.touches);
+                const ratio = dist / startDist;
+                const newZoom = Math.max(ZOOM_STEPS[0], Math.min(ZOOM_STEPS[ZOOM_STEPS.length - 1], Math.round(startZoom * ratio)));
+                panes[id].zoom = newZoom;
+                // Find closest zoom step index
+                panes[id].zoomIdx = ZOOM_STEPS.reduce((best, v, i) =>
+                    Math.abs(v - newZoom) < Math.abs(ZOOM_STEPS[best] - newZoom) ? i : best, 0);
+                applyZoom(id);
+            }
+        }, { passive: false });
+    }
+
+    function getTouchDist(touches) {
+        const dx = touches[0].clientX - touches[1].clientX;
+        const dy = touches[0].clientY - touches[1].clientY;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    function applyZoom(paneId) {
+        const pane = panes[paneId];
+        const scale = pane.zoom / 100;
+        document.getElementById(`zoom-${paneId}`).textContent = pane.zoom + '%';
+        pane.pages.style.transformOrigin = 'top left';
+        pane.pages.style.transform = `scale(${scale})`;
+        pane.pages.style.width = (100 / scale) + '%';
+    }
+
+    // Scroll tracking — update page indicator
+    for (const id of ['read', 'figures']) {
+        panes[id].scroll.addEventListener('scroll', () => {
+            updatePageIndicator(id);
+        }, { passive: true });
+    }
+
+    function updatePageIndicator(paneId) {
+        const scroll = panes[paneId].scroll;
+        const pages = scroll.querySelectorAll('.page-wrapper');
+        const scrollTop = scroll.scrollTop;
+        const scrollCenter = scrollTop + scroll.clientHeight / 3;
+
+        let currentPage = 1;
+        for (const pw of pages) {
+            const top = pw.offsetTop * (panes[paneId].zoom / 100);
+            const bottom = top + pw.offsetHeight * (panes[paneId].zoom / 100);
+            if (scrollCenter >= top && scrollCenter < bottom) {
+                currentPage = parseInt(pw.dataset.pageNum, 10);
+                break;
+            }
+        }
+        document.getElementById(`page-${paneId}`).textContent = currentPage;
+    }
+
     async function loadPDF(source) {
         uploadSection.style.display = 'none';
         loadingSection.style.display = '';
@@ -438,35 +579,33 @@
             const loadingTask = pdfjsLib.getDocument(source);
             pdfDoc = await loadingTask.promise;
 
-            loadingStatus.textContent = `Extracting text from ${pdfDoc.numPages} pages...`;
+            loadingStatus.textContent = 'Preparing viewer...';
 
-            // Extract text from all pages
-            pageTexts = [];
-            for (let i = 1; i <= pdfDoc.numPages; i++) {
-                const page = await pdfDoc.getPage(i);
-                const textContent = await page.getTextContent();
-                const text = textContent.items.map(item => item.str).join(' ');
-                pageTexts.push(text);
-                if (i % 10 === 0) {
-                    loadingStatus.textContent = `Extracting text... ${i}/${pdfDoc.numPages}`;
-                }
+            // Extract title from first page
+            const firstPage = await pdfDoc.getPage(1);
+            const textContent = await firstPage.getTextContent();
+            const firstPageText = textContent.items.map(item => item.str).join(' ');
+            paperTitle.textContent = extractTitle(firstPageText);
+
+            // Get reference dimensions for placeholders
+            const refViewport = firstPage.getViewport({ scale: 1 });
+            const aspectRatio = refViewport.height / refViewport.width;
+
+            // Build both panes with all pages
+            for (const id of ['read', 'figures']) {
+                buildPanePages(id, pdfDoc.numPages, aspectRatio);
+                document.getElementById(`total-${id}`).textContent = pdfDoc.numPages;
             }
 
-            // Identify figure pages and references
-            loadingStatus.textContent = 'Identifying figures and references...';
-            identifyFigures();
-
-            // Extract paper title from first page
-            const title = extractTitle();
-            paperTitle.textContent = title;
-
-            // Render
-            loadingStatus.textContent = 'Rendering pages...';
-            await renderDocument();
-
             loadingSection.style.display = 'none';
-            readerControls.style.display = '';
-            readerContent.style.display = '';
+            splitView.style.display = '';
+
+            // Set up lazy observers after layout is ready
+            requestAnimationFrame(() => {
+                for (const id of ['read', 'figures']) {
+                    setupPaneObserver(id);
+                }
+            });
         } catch (err) {
             loadingSection.style.display = 'none';
             uploadSection.style.display = '';
@@ -475,16 +614,10 @@
         }
     }
 
-    function extractTitle() {
-        if (pageTexts.length === 0) return 'Paper';
-        // NBER papers typically have the title in the first page
-        // Look for the title after "NBER WORKING PAPER SERIES" or just use the first substantial line
-        const firstPage = pageTexts[0];
-        const nberMatch = firstPage.match(/NBER WORKING PAPER SERIES\s+(.+?)(?:\s{3,}|\n)/i);
+    function extractTitle(firstPageText) {
+        const nberMatch = firstPageText.match(/NBER WORKING PAPER SERIES\s+(.+?)(?:\s{3,}|\n)/i);
         if (nberMatch) return nberMatch[1].trim();
-
-        // Fallback: first chunk of text that's not the NBER header
-        const lines = firstPage.split(/\s{3,}/);
+        const lines = firstPageText.split(/\s{3,}/);
         for (const line of lines) {
             const trimmed = line.trim();
             if (trimmed.length > 10 && !trimmed.match(/^NBER/i) && !trimmed.match(/^Working Paper/i)) {
@@ -494,277 +627,123 @@
         return 'NBER Paper';
     }
 
-    function identifyFigures() {
-        figurePages = {};
-        panelToFigure = {};
-        textPageRefs = {};
-        figurePageNumbers = new Set();
+    function buildPanePages(paneId, numPages, aspectRatio) {
+        const container = panes[paneId].pages;
+        container.innerHTML = '';
 
-        // Pass 1: Find figure/table captions on each page
-        // Also find panel captions and associate them with the figure on the same page
-        for (let i = 0; i < pageTexts.length; i++) {
-            const text = pageTexts[i];
+        for (let i = 0; i < numPages; i++) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'page-wrapper';
+            wrapper.dataset.pageIdx = i;
+            wrapper.dataset.pageNum = i + 1;
 
-            // Find all figure/table captions anywhere in the text (not just line starts)
-            let match;
-            const captionPattern = new RegExp(FIGURE_CAPTION_PATTERN.source, 'gi');
-            while ((match = captionPattern.exec(text)) !== null) {
-                const key = normalizeFigureKey(match[1], match[2]);
-                if (!figurePages[key]) figurePages[key] = [];
-                if (!figurePages[key].includes(i)) {
-                    figurePages[key].push(i);
-                }
-            }
+            const canvas = document.createElement('canvas');
+            // Set placeholder dimensions based on container width
+            canvas.style.width = '100%';
+            canvas.style.aspectRatio = `1 / ${aspectRatio}`;
+            canvas.style.background = 'white';
 
-            // Find panel captions on this page
-            const panelPattern = new RegExp(PANEL_CAPTION_PATTERN.source, 'gi');
-            while ((match = panelPattern.exec(text)) !== null) {
-                const panelKey = normalizeFigureKey(match[1], match[2]);
-                // Associate this panel with the figure on the same page
-                // (will be resolved after all pages are scanned)
-                if (!panelToFigure[panelKey]) {
-                    panelToFigure[panelKey] = { pages: [i] };
-                } else if (!panelToFigure[panelKey].pages.includes(i)) {
-                    panelToFigure[panelKey].pages.push(i);
-                }
-            }
+            wrapper.appendChild(canvas);
+
+            const label = document.createElement('div');
+            label.className = 'page-number';
+            label.textContent = `Page ${i + 1}`;
+            wrapper.appendChild(label);
+
+            container.appendChild(wrapper);
         }
-
-        // Resolve panels to their parent figures: a panel's parent is the figure
-        // whose caption appears on the same page (or the closest preceding page)
-        for (const [panelKey, info] of Object.entries(panelToFigure)) {
-            let parentFigure = null;
-            for (const panelPage of info.pages) {
-                // Look for a figure caption on the same page
-                for (const [figKey, figPages] of Object.entries(figurePages)) {
-                    if (figKey.startsWith('Panel')) continue; // skip other panels
-                    if (figPages.includes(panelPage)) {
-                        parentFigure = figKey;
-                        break;
-                    }
-                }
-                if (parentFigure) break;
-                // Fallback: look at the closest preceding page with a figure caption
-                for (let p = panelPage - 1; p >= Math.max(0, panelPage - 3); p--) {
-                    for (const [figKey, figPages] of Object.entries(figurePages)) {
-                        if (figKey.startsWith('Panel')) continue;
-                        if (figPages.includes(p)) {
-                            parentFigure = figKey;
-                            break;
-                        }
-                    }
-                    if (parentFigure) break;
-                }
-            }
-            panelToFigure[panelKey] = parentFigure; // string or null
-        }
-
-        // Heuristic: figure pages in NBER papers tend to be clustered at the end.
-        // A page is a "figure page" if it contains a figure caption AND is in the latter
-        // portion of the paper, OR if it has very little text besides the caption.
-        const totalPages = pageTexts.length;
-        for (const [key, pages] of Object.entries(figurePages)) {
-            for (const pageIdx of pages) {
-                const text = pageTexts[pageIdx];
-                const wordCount = text.split(/\s+/).length;
-                const isBackMatter = pageIdx > totalPages * 0.5;
-                const isShortPage = wordCount < 200;
-
-                if (isBackMatter || isShortPage) {
-                    figurePageNumbers.add(pageIdx);
-                }
-            }
-        }
-
-        // Pass 2: Find references to figures/panels in text pages
-        for (let i = 0; i < pageTexts.length; i++) {
-            if (figurePageNumbers.has(i)) continue;
-
-            const text = pageTexts[i];
-            const refs = new Set();
-
-            // Match figure/table references (e.g. "Figure 1", "Figures 2 and 3", "Table A1")
-            let m;
-            const figPattern = new RegExp(FIGURE_REF_PATTERN.source, 'gi');
-            while ((m = figPattern.exec(text)) !== null) {
-                const key = normalizeFigureKey(m[1], m[2]);
-                if (figurePages[key]) {
-                    refs.add(key);
-                }
-            }
-
-            // Match panel references (e.g. "Panel A", "Panels A and B")
-            const panPattern = new RegExp(PANEL_REF_PATTERN.source, 'gi');
-            while ((m = panPattern.exec(text)) !== null) {
-                const panelKey = normalizeFigureKey(m[1], m[2]);
-                // Resolve panel to parent figure
-                const parentFig = panelToFigure[panelKey];
-                if (parentFig && figurePages[parentFig]) {
-                    refs.add(parentFig);
-                }
-            }
-
-            // Also handle "Panels A and B" — extract the second letter after "and"
-            const panelsAndPattern = /\bPanels?\s+([A-Z])\s+and\s+([A-Z])\b/gi;
-            while ((m = panelsAndPattern.exec(text)) !== null) {
-                for (const letter of [m[1], m[2]]) {
-                    const panelKey = `Panel ${letter}`;
-                    const parentFig = panelToFigure[panelKey];
-                    if (parentFig && figurePages[parentFig]) {
-                        refs.add(parentFig);
-                    }
-                }
-            }
-
-            if (refs.size > 0) {
-                textPageRefs[i] = [...refs];
-            }
-        }
-
-        console.log('Figure pages:', figurePages);
-        console.log('Panel→Figure mapping:', panelToFigure);
-        console.log('Figure page numbers:', [...figurePageNumbers]);
-        console.log('Text page refs:', textPageRefs);
     }
 
-    function normalizeFigureKey(type, number) {
-        let normalizedType = type.trim();
-        // Normalize "Fig." and "Figs." to "Figure"
-        if (/^Figs?\.?$/i.test(normalizedType)) normalizedType = 'Figure';
-        // Normalize plurals: "Figures" → "Figure", "Tables" → "Table", "Panels" → "Panel"
-        normalizedType = normalizedType.replace(/s$/i, '');
-        normalizedType = normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1).toLowerCase();
-        // Handle "Appendix figure" -> "Appendix Figure"
-        normalizedType = normalizedType.replace(/\s+(\w)/g, (m, c) => ' ' + c.toUpperCase());
-        return `${normalizedType} ${number}`;
-    }
+    function setupPaneObserver(paneId) {
+        const pane = panes[paneId];
+        if (pane.observer) pane.observer.disconnect();
 
-    async function renderPage(pageNum, scale) {
-        const page = await pdfDoc.getPage(pageNum + 1);
-        const viewport = page.getViewport({ scale });
-        const canvas = document.createElement('canvas');
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        const ctx = canvas.getContext('2d');
-        await page.render({ canvasContext: ctx, viewport }).promise;
-        return canvas;
-    }
-
-    // Cap pixel ratio to avoid huge canvases on high-DPI mobile screens
-    const MAX_PIXEL_RATIO = 2;
-    const effectivePixelRatio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO);
-
-    // Track rendered state for lazy loading
-    let lazyObserver = null;
-
-    async function renderPageToCanvas(pageIdx, canvas, containerWidth) {
-        const page = await pdfDoc.getPage(pageIdx + 1);
-        const unscaledViewport = page.getViewport({ scale: 1 });
-        const scale = (containerWidth * effectivePixelRatio) / unscaledViewport.width;
-        const viewport = page.getViewport({ scale });
-
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        // Set aspect ratio placeholder height so layout is stable before render
-        const aspectRatio = unscaledViewport.height / unscaledViewport.width;
-        canvas.style.width = '100%';
-        canvas.style.height = (containerWidth * aspectRatio) + 'px';
-
-        const ctx = canvas.getContext('2d');
-        await page.render({ canvasContext: ctx, viewport }).promise;
-    }
-
-    function setupLazyObserver() {
-        if (lazyObserver) lazyObserver.disconnect();
-
-        lazyObserver = new IntersectionObserver((entries) => {
+        pane.observer = new IntersectionObserver((entries) => {
             for (const entry of entries) {
                 if (entry.isIntersecting) {
-                    const el = entry.target;
-                    const pageIdx = parseInt(el.dataset.pageIdx, 10);
-                    const containerWidth = readerContent.clientWidth || 900;
-                    const canvas = el.querySelector('canvas');
-                    if (canvas && !el.dataset.rendered) {
-                        el.dataset.rendered = '1';
-                        renderPageToCanvas(pageIdx, canvas, containerWidth);
+                    const wrapper = entry.target;
+                    const pageIdx = parseInt(wrapper.dataset.pageIdx, 10);
+                    if (!pane.rendered.has(pageIdx)) {
+                        pane.rendered.add(pageIdx);
+                        renderPageCanvas(paneId, wrapper, pageIdx);
                     }
-                    lazyObserver.unobserve(el);
+                    pane.observer.unobserve(wrapper);
                 }
             }
-        }, { rootMargin: '800px' }); // Start loading 800px before visible
+        }, {
+            root: pane.scroll,
+            rootMargin: '600px'
+        });
+
+        const wrappers = pane.pages.querySelectorAll('.page-wrapper');
+        for (const w of wrappers) {
+            pane.observer.observe(w);
+        }
     }
 
-    async function renderDocument() {
-        readerContent.innerHTML = '';
-        const containerWidth = readerContent.clientWidth || 900;
+    async function renderPageCanvas(paneId, wrapper, pageIdx) {
+        const canvas = wrapper.querySelector('canvas');
+        const page = await pdfDoc.getPage(pageIdx + 1);
+        const unscaledViewport = page.getViewport({ scale: 1 });
 
-        setupLazyObserver();
+        // Render at pane's actual width for good quality
+        const paneWidth = panes[paneId].scroll.clientWidth;
+        const scale = (paneWidth * effectivePixelRatio) / unscaledViewport.width;
+        const viewport = page.getViewport({ scale });
 
-        // Figure out which figures have already been inlined so we can track
-        const inlinedFigures = new Set();
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
 
-        // Pre-compute aspect ratios for placeholder sizing (uses first page as reference)
-        const refPage = await pdfDoc.getPage(1);
-        const refViewport = refPage.getViewport({ scale: 1 });
-        const defaultAspectRatio = refViewport.height / refViewport.width;
+        const ctx = canvas.getContext('2d');
+        await page.render({ canvasContext: ctx, viewport }).promise;
+    }
 
-        for (let i = 0; i < pdfDoc.numPages; i++) {
-            const isFigurePage = figurePageNumbers.has(i);
+    // Divider drag to resize panes
+    const divider = document.getElementById('pane-divider');
+    let isDragging = false;
 
-            // Skip figure pages if inlining is on (they'll appear inline)
-            if (inlineFigures && isFigurePage) continue;
+    divider.addEventListener('mousedown', startDrag);
+    divider.addEventListener('touchstart', startDrag, { passive: false });
 
-            // Create placeholder with canvas
-            const canvas = document.createElement('canvas');
-            canvas.style.width = '100%';
-            canvas.style.height = (containerWidth * defaultAspectRatio) + 'px';
-            canvas.style.background = '#fafafa';
+    function startDrag(e) {
+        e.preventDefault();
+        isDragging = true;
+        document.addEventListener('mousemove', onDrag);
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('touchmove', onDrag, { passive: false });
+        document.addEventListener('touchend', stopDrag);
+    }
 
-            const container = document.createElement('div');
-            container.className = 'page-container';
-            container.dataset.pageIdx = i;
-            container.appendChild(canvas);
+    function onDrag(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        const container = document.querySelector('.split-container');
+        const rect = container.getBoundingClientRect();
+        const isPortrait = window.matchMedia('(orientation: portrait)').matches;
 
-            const pageLabel = document.createElement('div');
-            pageLabel.className = 'page-number';
-            pageLabel.textContent = `Page ${i + 1}`;
-            container.appendChild(pageLabel);
+        const paneRead = document.getElementById('pane-read');
+        const paneFigures = document.getElementById('pane-figures');
 
-            readerContent.appendChild(container);
-            lazyObserver.observe(container);
-
-            // If inlining is on, insert referenced figures after this page
-            if (inlineFigures && textPageRefs[i]) {
-                for (const figKey of textPageRefs[i]) {
-                    if (inlinedFigures.has(figKey)) continue;
-                    inlinedFigures.add(figKey);
-
-                    const figPageIndices = figurePages[figKey];
-                    if (!figPageIndices) continue;
-
-                    for (const figPageIdx of figPageIndices) {
-                        const figCanvas = document.createElement('canvas');
-                        figCanvas.style.width = '100%';
-                        figCanvas.style.height = (containerWidth * defaultAspectRatio) + 'px';
-                        figCanvas.style.background = '#f0f7ff';
-
-                        const figContainer = document.createElement('div');
-                        figContainer.className = 'page-container figure-inline';
-                        figContainer.id = `inline-${figKey.replace(/\s+/g, '-')}`;
-                        figContainer.dataset.pageIdx = figPageIdx;
-
-                        const header = document.createElement('div');
-                        header.className = 'figure-inline-header';
-                        header.innerHTML = `<span class="fig-label">${figKey}</span><span class="fig-page-link">from page ${figPageIdx + 1}</span>`;
-
-                        figContainer.appendChild(header);
-                        figContainer.appendChild(figCanvas);
-                        readerContent.appendChild(figContainer);
-                        lazyObserver.observe(figContainer);
-                    }
-                }
-            }
+        let pos;
+        if (isPortrait) {
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            pos = (clientY - rect.top) / rect.height;
+        } else {
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            pos = (clientX - rect.left) / rect.width;
         }
+
+        pos = Math.max(0.2, Math.min(0.8, pos));
+        paneRead.style.flex = `${pos}`;
+        paneFigures.style.flex = `${1 - pos}`;
+    }
+
+    function stopDrag() {
+        isDragging = false;
+        document.removeEventListener('mousemove', onDrag);
+        document.removeEventListener('mouseup', stopDrag);
+        document.removeEventListener('touchmove', onDrag);
+        document.removeEventListener('touchend', stopDrag);
     }
 </script>
 {{ end }}
