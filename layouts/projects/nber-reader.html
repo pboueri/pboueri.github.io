@@ -333,14 +333,19 @@
 
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.9.155/pdf.worker.min.mjs';
 
-    const FIGURE_PATTERN = /\b(Figure|Fig\.|Table|Panel|Appendix\s+Figure|Appendix\s+Table)\s+([A-Z]?\d+[A-Za-z]?(?:\.\d+)?)/gi;
-    const FIGURE_CAPTION_PATTERN = /^\s*(Figure|Fig\.|Table|Panel|Appendix\s+Figure|Appendix\s+Table)\s+([A-Z]?\d+[A-Za-z]?(?:\.\d+)?)\s*[.:–—-]/i;
+    // Patterns for figures/tables — requires at least one digit in the identifier
+    const FIGURE_REF_PATTERN = /\b(Figures?|Fig\.|Tables?|Appendix\s+Figures?|Appendix\s+Tables?)\s+([A-Z]?\d+[A-Za-z]?(?:\.\d+)?)/gi;
+    const FIGURE_CAPTION_PATTERN = /\b(Figure|Fig\.|Table|Appendix\s+Figure|Appendix\s+Table)\s+([A-Z]?\d+[A-Za-z]?(?:\.\d+)?)\s*[.:–—\-]/i;
+    // Panel pattern — identifier can be letter-only (Panel A) or letter+digit (Panel A1)
+    const PANEL_REF_PATTERN = /\b(Panels?)\s+([A-Z]\d?)\b/gi;
+    const PANEL_CAPTION_PATTERN = /\b(Panel)\s+([A-Z]\d?)\s*[.:–—\-]/i;
     const NOTES_PATTERN = /^\s*Notes?\s*[.:–—-]/i;
 
     let pdfDoc = null;
     let pageTexts = [];
     let pageCanvases = [];
     let figurePages = {};      // { "Figure 1": [pageNum, ...], ... }
+    let panelToFigure = {};    // { "Panel A": "Figure 1", ... }
     let textPageRefs = {};     // { pageNum: ["Figure 1", "Table 2", ...] }
     let figurePageNumbers = new Set();
     let inlineFigures = true;
@@ -394,6 +399,7 @@
         pageTexts = [];
         pageCanvases = [];
         figurePages = {};
+        panelToFigure = {};
         textPageRefs = {};
         figurePageNumbers = new Set();
         readerContent.innerHTML = '';
@@ -490,23 +496,67 @@
 
     function identifyFigures() {
         figurePages = {};
+        panelToFigure = {};
         textPageRefs = {};
         figurePageNumbers = new Set();
 
-        // Pass 1: Find pages that contain figure/table captions (these are figure pages)
+        // Pass 1: Find figure/table captions on each page
+        // Also find panel captions and associate them with the figure on the same page
         for (let i = 0; i < pageTexts.length; i++) {
             const text = pageTexts[i];
-            const lines = text.split(/\s{2,}/);
-            for (const line of lines) {
-                const captionMatch = line.match(FIGURE_CAPTION_PATTERN);
-                if (captionMatch) {
-                    const key = normalizeFigureKey(captionMatch[1], captionMatch[2]);
-                    if (!figurePages[key]) figurePages[key] = [];
-                    if (!figurePages[key].includes(i)) {
-                        figurePages[key].push(i);
-                    }
+
+            // Find all figure/table captions anywhere in the text (not just line starts)
+            let match;
+            const captionPattern = new RegExp(FIGURE_CAPTION_PATTERN.source, 'gi');
+            while ((match = captionPattern.exec(text)) !== null) {
+                const key = normalizeFigureKey(match[1], match[2]);
+                if (!figurePages[key]) figurePages[key] = [];
+                if (!figurePages[key].includes(i)) {
+                    figurePages[key].push(i);
                 }
             }
+
+            // Find panel captions on this page
+            const panelPattern = new RegExp(PANEL_CAPTION_PATTERN.source, 'gi');
+            while ((match = panelPattern.exec(text)) !== null) {
+                const panelKey = normalizeFigureKey(match[1], match[2]);
+                // Associate this panel with the figure on the same page
+                // (will be resolved after all pages are scanned)
+                if (!panelToFigure[panelKey]) {
+                    panelToFigure[panelKey] = { pages: [i] };
+                } else if (!panelToFigure[panelKey].pages.includes(i)) {
+                    panelToFigure[panelKey].pages.push(i);
+                }
+            }
+        }
+
+        // Resolve panels to their parent figures: a panel's parent is the figure
+        // whose caption appears on the same page (or the closest preceding page)
+        for (const [panelKey, info] of Object.entries(panelToFigure)) {
+            let parentFigure = null;
+            for (const panelPage of info.pages) {
+                // Look for a figure caption on the same page
+                for (const [figKey, figPages] of Object.entries(figurePages)) {
+                    if (figKey.startsWith('Panel')) continue; // skip other panels
+                    if (figPages.includes(panelPage)) {
+                        parentFigure = figKey;
+                        break;
+                    }
+                }
+                if (parentFigure) break;
+                // Fallback: look at the closest preceding page with a figure caption
+                for (let p = panelPage - 1; p >= Math.max(0, panelPage - 3); p--) {
+                    for (const [figKey, figPages] of Object.entries(figurePages)) {
+                        if (figKey.startsWith('Panel')) continue;
+                        if (figPages.includes(p)) {
+                            parentFigure = figKey;
+                            break;
+                        }
+                    }
+                    if (parentFigure) break;
+                }
+            }
+            panelToFigure[panelKey] = parentFigure; // string or null
         }
 
         // Heuristic: figure pages in NBER papers tend to be clustered at the end.
@@ -515,7 +565,6 @@
         const totalPages = pageTexts.length;
         for (const [key, pages] of Object.entries(figurePages)) {
             for (const pageIdx of pages) {
-                // Check if this page is mostly a figure (little text) or in the back matter
                 const text = pageTexts[pageIdx];
                 const wordCount = text.split(/\s+/).length;
                 const isBackMatter = pageIdx > totalPages * 0.5;
@@ -527,29 +576,63 @@
             }
         }
 
-        // Pass 2: Find references to figures in text pages
+        // Pass 2: Find references to figures/panels in text pages
         for (let i = 0; i < pageTexts.length; i++) {
             if (figurePageNumbers.has(i)) continue;
 
             const text = pageTexts[i];
             const refs = new Set();
-            let match;
-            const pattern = new RegExp(FIGURE_PATTERN.source, 'gi');
-            while ((match = pattern.exec(text)) !== null) {
-                const key = normalizeFigureKey(match[1], match[2]);
+
+            // Match figure/table references (e.g. "Figure 1", "Figures 2 and 3", "Table A1")
+            let m;
+            const figPattern = new RegExp(FIGURE_REF_PATTERN.source, 'gi');
+            while ((m = figPattern.exec(text)) !== null) {
+                const key = normalizeFigureKey(m[1], m[2]);
                 if (figurePages[key]) {
                     refs.add(key);
                 }
             }
+
+            // Match panel references (e.g. "Panel A", "Panels A and B")
+            const panPattern = new RegExp(PANEL_REF_PATTERN.source, 'gi');
+            while ((m = panPattern.exec(text)) !== null) {
+                const panelKey = normalizeFigureKey(m[1], m[2]);
+                // Resolve panel to parent figure
+                const parentFig = panelToFigure[panelKey];
+                if (parentFig && figurePages[parentFig]) {
+                    refs.add(parentFig);
+                }
+            }
+
+            // Also handle "Panels A and B" — extract the second letter after "and"
+            const panelsAndPattern = /\bPanels?\s+([A-Z])\s+and\s+([A-Z])\b/gi;
+            while ((m = panelsAndPattern.exec(text)) !== null) {
+                for (const letter of [m[1], m[2]]) {
+                    const panelKey = `Panel ${letter}`;
+                    const parentFig = panelToFigure[panelKey];
+                    if (parentFig && figurePages[parentFig]) {
+                        refs.add(parentFig);
+                    }
+                }
+            }
+
             if (refs.size > 0) {
                 textPageRefs[i] = [...refs];
             }
         }
+
+        console.log('Figure pages:', figurePages);
+        console.log('Panel→Figure mapping:', panelToFigure);
+        console.log('Figure page numbers:', [...figurePageNumbers]);
+        console.log('Text page refs:', textPageRefs);
     }
 
     function normalizeFigureKey(type, number) {
         let normalizedType = type.trim();
-        if (/^Fig\.?$/i.test(normalizedType)) normalizedType = 'Figure';
+        // Normalize "Fig." and "Figs." to "Figure"
+        if (/^Figs?\.?$/i.test(normalizedType)) normalizedType = 'Figure';
+        // Normalize plurals: "Figures" → "Figure", "Tables" → "Table", "Panels" → "Panel"
+        normalizedType = normalizedType.replace(/s$/i, '');
         normalizedType = normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1).toLowerCase();
         // Handle "Appendix figure" -> "Appendix Figure"
         normalizedType = normalizedType.replace(/\s+(\w)/g, (m, c) => ' ' + c.toUpperCase());
