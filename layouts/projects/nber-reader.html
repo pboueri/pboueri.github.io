@@ -343,7 +343,7 @@
     }
 
     .pane-pages {
-        transform-origin: top left;
+        /* Width is set dynamically for zoom */
     }
 
     .pane-pages .page-wrapper {
@@ -462,7 +462,6 @@
             panes[id].zoom = 100;
             panes[id].zoomIdx = 2;
             document.getElementById(`zoom-${id}`).textContent = '100%';
-            panes[id].pages.style.transform = '';
             panes[id].pages.style.width = '';
         }
         splitView.style.display = 'none';
@@ -540,9 +539,27 @@
         const pane = panes[paneId];
         const scale = pane.zoom / 100;
         document.getElementById(`zoom-${paneId}`).textContent = pane.zoom + '%';
-        pane.pages.style.transformOrigin = 'top left';
-        pane.pages.style.transform = `scale(${scale})`;
-        pane.pages.style.width = (100 / scale) + '%';
+
+        // CSS transform doesn't affect layout, so the scroll container won't resize.
+        // Instead, set width on the pages container directly and re-render at the new size.
+        // Width > 100% makes the container overflow, which the scroll container handles.
+        pane.pages.style.width = (scale * 100) + '%';
+
+        // Re-render visible pages at the new effective width
+        rerenderVisiblePages(paneId);
+    }
+
+    function rerenderVisiblePages(paneId) {
+        const pane = panes[paneId];
+        const wrappers = pane.pages.querySelectorAll('.page-wrapper');
+        const scrollRect = pane.scroll.getBoundingClientRect();
+
+        // Clear rendered set so pages get re-rendered at new scale
+        pane.rendered = new Set();
+
+        // Disconnect and re-observe to trigger fresh renders
+        if (pane.observer) pane.observer.disconnect();
+        setupPaneObserver(paneId);
     }
 
     // Scroll tracking — update page indicator
@@ -560,8 +577,8 @@
 
         let currentPage = 1;
         for (const pw of pages) {
-            const top = pw.offsetTop * (panes[paneId].zoom / 100);
-            const bottom = top + pw.offsetHeight * (panes[paneId].zoom / 100);
+            const top = pw.offsetTop;
+            const bottom = top + pw.offsetHeight;
             if (scrollCenter >= top && scrollCenter < bottom) {
                 currentPage = parseInt(pw.dataset.pageNum, 10);
                 break;
@@ -686,9 +703,9 @@
         const page = await pdfDoc.getPage(pageIdx + 1);
         const unscaledViewport = page.getViewport({ scale: 1 });
 
-        // Render at pane's actual width for good quality
-        const paneWidth = panes[paneId].scroll.clientWidth;
-        const scale = (paneWidth * effectivePixelRatio) / unscaledViewport.width;
+        // Use the pages container width (reflects zoom) for rendering quality
+        const containerWidth = panes[paneId].pages.clientWidth;
+        const scale = (containerWidth * effectivePixelRatio) / unscaledViewport.width;
         const viewport = page.getViewport({ scale });
 
         canvas.width = viewport.width;
