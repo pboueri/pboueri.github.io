@@ -1,0 +1,90 @@
+name: Validate Hugo Build
+
+on:
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: 0.147.8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install Hugo CLI
+        run: |
+          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
+          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
+
+      - name: Install Dart Sass
+        run: sudo snap install dart-sass
+
+      - name: Install Node.js dependencies
+        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+
+      - name: Generate site data
+        run: |
+          chmod +x ./build_site_data.sh
+          chmod +x ./scripts/generate-all-prompt-history.sh
+          ./build_site_data.sh
+
+      - name: Build with Hugo
+        run: hugo --minify
+
+      - name: Check for draft content in output
+        run: |
+          # Ensure no draft content leaked into the build
+          if grep -r '"draft":true' public/ 2>/dev/null; then
+            echo "::error::Draft content found in build output"
+            exit 1
+          fi
+
+      - name: Validate HTML output
+        run: |
+          # Check that key pages were generated
+          for page in index.html blog/index.html projects/index.html; do
+            if [ ! -f "public/$page" ]; then
+              echo "::error::Missing expected page: public/$page"
+              exit 1
+            fi
+          done
+          echo "All expected pages present"
+
+      - name: Check internal links
+        run: |
+          # Find broken internal links (href="/..." or href="./...")
+          broken=0
+          # Extract internal absolute links from HTML files
+          for link in $(grep -roh 'href="/[^"]*"' public/ | sed 's/href="//;s/"$//' | sort -u); do
+            # Strip trailing slash, anchors, and query params
+            path=$(echo "$link" | sed 's/#.*//;s/?.*//' | sed 's:/$::')
+            if [ -z "$path" ]; then
+              path="/"
+            fi
+            # Check if the path resolves to a file or directory with index.html
+            target="public${path}"
+            if [ ! -f "$target" ] && [ ! -f "${target}/index.html" ] && [ ! -f "${target}.html" ]; then
+              echo "::warning::Broken internal link: $link"
+              broken=$((broken + 1))
+            fi
+          done
+          if [ $broken -gt 0 ]; then
+            echo "::error::Found $broken broken internal link(s)"
+            exit 1
+          fi
+          echo "All internal links valid"
