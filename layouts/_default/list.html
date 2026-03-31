@@ -12,7 +12,7 @@
         {{ range .Pages }}
         <article style="background: #f8f9fa; padding: 1.5rem; margin-bottom: 1.5rem; border-radius: 6px; border-left: 4px solid #007acc;">
             <h2 style="margin-bottom: 0.5rem;">
-                <a href="{{ .Permalink }}" style="color: #007acc; text-decoration: none;">{{ .Title }}</a>
+                <a href="{{ .RelPermalink }}" style="color: #007acc; text-decoration: none;">{{ .Title }}</a>
             </h2>
             {{ with .Date }}
             <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">{{ .Format "January 2, 2006" }}</p>

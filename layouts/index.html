@@ -35,9 +35,14 @@
     <div class="section-card">
         <h2>Talks</h2>
         <p>Presentations and talks exploring AI and programming.</p>
+        {{ $talks := (where .Site.RegularPages "Section" "talks").ByDate.Reverse }}
+        {{ if $talks }}
         <ul style="margin-top: 1rem; padding-left: 1.5rem;">
-            <li><a href="/talks/ai-tinkerers-presentation/">AI Tinkerers: LLMs as a New Medium</a></li>
+            {{ range first 3 $talks }}
+            <li><a href="{{ .RelPermalink }}">{{ .Title }}</a> <span style="color: #666; font-size: 0.85rem;">{{ with .Params.event_date }}{{ time.AsTime . | time.Format "Jan 2006" }}{{ else }}{{ .Date.Format "Jan 2006" }}{{ end }}</span></li>
+            {{ end }}
         </ul>
+        {{ end }}
         <p style="margin-top: 1rem;"><a href="/talks/">View all talks →</a></p>
     </div>
     

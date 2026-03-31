@@ -1,0 +1,60 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e4]:
+      - link "Patrick Boueri" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - list [ref=e6]:
+        - listitem [ref=e7]:
+          - link "Home" [ref=e8] [cursor=pointer]:
+            - /url: /
+        - listitem [ref=e9]:
+          - link "About" [ref=e10] [cursor=pointer]:
+            - /url: /about/
+        - listitem [ref=e11]:
+          - link "Projects" [ref=e12] [cursor=pointer]:
+            - /url: /projects/
+        - listitem [ref=e13]:
+          - link "Blog" [ref=e14] [cursor=pointer]:
+            - /url: /blog/
+        - listitem [ref=e15]:
+          - link "Prompts" [ref=e16] [cursor=pointer]:
+            - /url: /prompts/
+  - main [ref=e17]:
+    - generic [ref=e19]:
+      - heading "Talks" [level=1] [ref=e20]
+      - generic [ref=e21]:
+        - heading "Talks" [level=1] [ref=e22]
+        - paragraph [ref=e23]: A collection of presentations and talks exploring the intersection of AI, programming, and communication.
+      - generic [ref=e24]:
+        - article [ref=e25]:
+          - heading "IntentC -- An Experimental Compiler of Intent" [level=2] [ref=e26]:
+            - link "IntentC -- An Experimental Compiler of Intent" [ref=e27] [cursor=pointer]:
+              - /url: https://pboueri.github.io/talks/intentc-acm-chicago/
+          - paragraph [ref=e28]: March 31, 2026
+          - paragraph
+          - paragraph [ref=e29]: Core foundations of software engineering – abstraction, collaboration, correctness, and composition – still matter, despite significant changes in how we build software today.
+          - paragraph [ref=e30]: This presentation examines what mature software projects should resemble in the future, including their definition, construction, and evolution. The session features prepared demonstrations and materials, with dedicated time for audience discussion and questions.
+          - paragraph [ref=e31]:
+            - strong [ref=e32]: "Event Schedule (Central Time):"
+          - list [ref=e33]:
+            - listitem [ref=e34]: "5:30-6:00 PM: Networking"
+            - listitem [ref=e35]: "6:00-6:05 PM: Introductions"
+            - listitem [ref=e36]: "6:05-6:45 PM: Talk"
+            - listitem [ref=e37]: "6:45-6:55 PM: Q&A"
+            - listitem [ref=e38]: "6:55-7:00 PM: Adjournment"
+            - listitem [ref=e39]: "7:00-7:30 PM: Networking"
+          - paragraph [ref=e40]:
+            - strong [ref=e41]: "Venue:"
+            - text: UIC Student Center East, Room 605, Chicago, IL (Hybrid event with Zoom option)
+          - paragraph
+        - article [ref=e42]:
+          - 'heading "AI Tinkerers: LLMs as a New Medium of Communication" [level=2] [ref=e43]':
+            - 'link "AI Tinkerers: LLMs as a New Medium of Communication" [ref=e44] [cursor=pointer]':
+              - /url: https://pboueri.github.io/talks/ai-tinkerers-presentation/
+          - paragraph [ref=e45]: January 9, 2025
+          - paragraph
+          - 'heading "AI Tinkerers: LLMs as a New Medium of Communication" [level=1] [ref=e46]'
+          - paragraph [ref=e47]: A presentation exploring how Large Language Models are fundamentally changing how we communicate with each other and with computers.
+          - paragraph
+  - contentinfo [ref=e48]:
+    - paragraph [ref=e50]: © 2026 Patrick Boueri. All rights reserved.

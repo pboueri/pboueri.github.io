@@ -1,0 +1,71 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e4]:
+      - link "Patrick Boueri" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - list [ref=e6]:
+        - listitem [ref=e7]:
+          - link "Home" [ref=e8] [cursor=pointer]:
+            - /url: /
+        - listitem [ref=e9]:
+          - link "About" [ref=e10] [cursor=pointer]:
+            - /url: /about/
+        - listitem [ref=e11]:
+          - link "Projects" [ref=e12] [cursor=pointer]:
+            - /url: /projects/
+        - listitem [ref=e13]:
+          - link "Blog" [ref=e14] [cursor=pointer]:
+            - /url: /blog/
+        - listitem [ref=e15]:
+          - link "Prompts" [ref=e16] [cursor=pointer]:
+            - /url: /prompts/
+  - main [ref=e17]:
+    - article [ref=e20]:
+      - generic [ref=e21]:
+        - heading "IntentC -- An Experimental Compiler of Intent" [level=1] [ref=e22]
+        - paragraph [ref=e23]: March 31, 2026 · ACM Chicago
+        - link "View Event Page →" [ref=e24] [cursor=pointer]:
+          - /url: https://www.meetup.com/acm-chicago/events/313866746/
+      - iframe [ref=e26]:
+        - generic [active]:
+          - generic:
+            - generic [ref=f1e1]:
+              - generic [ref=f1e2]:
+                - button "Previous (←)" [disabled] [ref=f1e3]
+                - listbox "Open the slide picker" [ref=f1e6] [cursor=pointer]:
+                  - option "1" [selected] [ref=f1e7]
+                - button "Next (→)" [ref=f1e8] [cursor=pointer]
+                - button "Open the options menu" [ref=f1e11] [cursor=pointer]
+              - link "Google Slides" [ref=f1e15] [cursor=pointer]:
+                - /url: https://docs.google.com/presentation/?usp=slides_web
+                - text: Google Slides
+            - generic [ref=f1e18]:
+              - generic [ref=f1e22]:
+                - 'img "Slide 1 of 45: intentc" [ref=f1e23]'
+                - img [ref=f1e25]:
+                  - generic [ref=f1e27]:
+                    - img "intentc" [ref=f1e30]
+                    - img "An Experimental Compiler of Intent" [ref=f1e34]
+                    - img "Patrick Boueri" [ref=f1e38]
+                    - link "Patrick Boueri" [ref=f1e44] [cursor=pointer]
+                    - img "ACM Chicago – April 2nd" [ref=f1e46]
+                    - link "ACM Chicago – April 2nd" [ref=f1e52] [cursor=pointer]
+              - img
+              - img
+      - generic [ref=e27]:
+        - paragraph [ref=e28]: Core foundations of software engineering – abstraction, collaboration, correctness, and composition – still matter, despite significant changes in how we build software today.
+        - paragraph [ref=e29]: This presentation examines what mature software projects should resemble in the future, including their definition, construction, and evolution. The session features prepared demonstrations and materials, with dedicated time for audience discussion and questions.
+        - paragraph [ref=e30]:
+          - strong [ref=e31]: "Event Schedule (Central Time):"
+        - list [ref=e32]:
+          - listitem [ref=e33]: "5:30-6:00 PM: Networking"
+          - listitem [ref=e34]: "6:00-6:05 PM: Introductions"
+          - listitem [ref=e35]: "6:05-6:45 PM: Talk"
+          - listitem [ref=e36]: "6:45-6:55 PM: Q&A"
+          - listitem [ref=e37]: "6:55-7:00 PM: Adjournment"
+          - listitem [ref=e38]: "7:00-7:30 PM: Networking"
+        - paragraph [ref=e39]:
+          - strong [ref=e40]: "Venue:"
+          - text: UIC Student Center East, Room 605, Chicago, IL (Hybrid event with Zoom option)
+  - contentinfo [ref=e41]:
+    - paragraph [ref=e43]: © 2026 Patrick Boueri. All rights reserved.
