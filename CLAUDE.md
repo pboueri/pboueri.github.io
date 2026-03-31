@@ -41,6 +41,7 @@ The site follows Hugo's standard structure:
 
 ### Site Rules (Always Apply)
 - Keep the site static - never rely on a backend server
+- Do not use SCSS/Sass files - use plain CSS only (Dart Sass is not installed in CI)
 - For authentication, prompt users for API keys on the frontend
 - Validate Hugo builds after major changes: run `hugo` to check
 - Use Hugo exclusively for site generation
